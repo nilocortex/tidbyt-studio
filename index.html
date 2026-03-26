@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tidbyt Studio</title>
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #14141f;
+  --surface2: #1e1e2e;
+  --border: #2a2a3a;
+  --text: #e0e0e8;
+  --text-dim: #888;
+  --accent: #6366f1;
+  --accent2: #22d3ee;
+  --danger: #ef4444;
+  --success: #22c55e;
+  --pixel-gap: 1px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+}
+/* Layout */
+.app { display: grid; grid-template-rows: 48px 1fr; height: 100vh; }
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px; background: var(--surface); border-bottom: 1px solid var(--border);
+}
+.header h1 { font-size: 16px; color: var(--accent2); letter-spacing: 2px; }
+.header h1 span { color: var(--accent); }
+.main { display: grid; grid-template-columns: 260px 1fr 320px; overflow: hidden; }
+
+/* Panels */
+.panel {
+  background: var(--surface); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.panel:last-child { border-right: none; border-left: 1px solid var(--border); }
+.panel-title {
+  padding: 10px 14px; font-size: 11px; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--accent2); border-bottom: 1px solid var(--border);
+  font-weight: 700; flex-shrink: 0;
+}
+.panel-body { flex: 1; overflow-y: auto; padding: 12px; }
+
+/* Tools Panel */
+.tool-section { margin-bottom: 16px; }
+.tool-section h3 {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-dim); margin-bottom: 8px;
+}
+.tool-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.tool-btn {
+  background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+  padding: 8px; border-radius: 4px; cursor: pointer; font-size: 16px;
+  text-align: center; transition: all 0.15s;
+}
+.tool-btn:hover { border-color: var(--accent); background: #1a1a2e; }
+.tool-btn.active { border-color: var(--accent); background: var(--accent); color: #fff; }
+.tool-btn[title]:hover::after {
+  content: attr(title); position: absolute; /* handled via title attr */
+}
+
+/* Color */
+.color-row { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; }
+.color-swatch {
+  width: 28px; height: 28px; border-radius: 4px; border: 2px solid var(--border);
+  cursor: pointer;
+}
+.color-swatch.active { border-color: var(--accent2); }
+.color-input { flex: 1; }
+.palette { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; }
+.palette-color {
+  width: 100%; aspect-ratio: 1; border-radius: 3px; cursor: pointer;
+  border: 1px solid transparent; transition: border-color 0.1s;
+}
+.palette-color:hover { border-color: var(--text); }
+
+/* Canvas Area */
+.canvas-area {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; background: var(--bg); position: relative;
+}
+.canvas-container { position: relative; }
+#pixelCanvas {
+  image-rendering: pixelated; cursor: crosshair;
+  border: 2px solid var(--border); border-radius: 4px;
+}
+.canvas-info {
+  display: flex; gap: 16px; margin-top: 12px; font-size: 11px; color: var(--text-dim);
+}
+.canvas-info span { background: var(--surface); padding: 4px 10px; border-radius: 4px; }
+
+/* Preview */
+.preview-section { margin-bottom: 16px; }
+.preview-display {
+  background: #000; border-radius: 12px; padding: 16px;
+  display: flex; justify-content: center; align-items: center;
+  box-shadow: 0 0 30px rgba(99,102,241,0.1);
+  margin-bottom: 12px;
+}
+#previewCanvas { image-rendering: pixelated; border-radius: 4px; }
+
+/* Frames */
+.frames-bar {
+  display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px;
+}
+.frame-thumb {
+  width: 40px; height: 20px; border: 2px solid var(--border); border-radius: 3px;
+  cursor: pointer; image-rendering: pixelated; background: #000;
+}
+.frame-thumb.active { border-color: var(--accent); }
+.frame-thumb canvas { width: 100%; height: 100%; image-rendering: pixelated; }
+
+/* Buttons */
+.btn {
+  padding: 8px 14px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--surface2); color: var(--text); cursor: pointer;
+  font-family: inherit; font-size: 12px; transition: all 0.15s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn:hover { border-color: var(--accent); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn-primary:hover { background: #5558e6; }
+.btn-danger { border-color: var(--danger); color: var(--danger); }
+.btn-danger:hover { background: var(--danger); color: #fff; }
+.btn-success { background: var(--success); border-color: var(--success); color: #000; }
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* Inputs */
+.input-group { margin-bottom: 10px; }
+.input-group label {
+  display: block; font-size: 10px; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--text-dim); margin-bottom: 4px;
+}
+.input-group input, .input-group select, .input-group textarea {
+  width: 100%; padding: 7px 10px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text); font-family: inherit; font-size: 12px;
+}
+.input-group textarea { resize: vertical; min-height: 60px; }
+.input-group input:focus, .input-group textarea:focus {
+  outline: none; border-color: var(--accent);
+}
+
+/* Widget Templates */
+.widget-card {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s;
+}
+.widget-card:hover { border-color: var(--accent); }
+.widget-card h4 { font-size: 12px; margin-bottom: 4px; }
+.widget-card p { font-size: 10px; color: var(--text-dim); }
+
+/* Starlark Editor */
+.code-editor {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+  padding: 1px; margin-bottom: 12px; position: relative;
+}
+.code-editor textarea {
+  width: 100%; min-height: 200px; background: transparent; border: none;
+  color: var(--accent2); font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px; padding: 10px; resize: vertical; line-height: 1.5;
+}
+.code-editor textarea:focus { outline: none; }
+
+/* Push config */
+.push-section { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; }
+
+/* Tabs */
+.tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.tab {
+  padding: 8px 14px; font-size: 11px; cursor: pointer; color: var(--text-dim);
+  border-bottom: 2px solid transparent; text-transform: uppercase; letter-spacing: 1px;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 20px; right: 20px; padding: 12px 20px;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+  font-size: 12px; z-index: 999; transform: translateY(100px);
+  transition: transform 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.toast.show { transform: translateY(0); }
+.toast.success { border-color: var(--success); }
+.toast.error { border-color: var(--danger); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .main { grid-template-columns: 1fr; }
+  .panel { border: none; border-bottom: 1px solid var(--border); max-height: 40vh; }
+}
+
+/* Layer list */
+.layer-item {
+  display: flex; align-items: center; gap: 8px; padding: 6px 8px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+  margin-bottom: 4px; font-size: 11px; cursor: pointer;
+}
+.layer-item.active { border-color: var(--accent); }
+.layer-item .layer-vis { cursor: pointer; opacity: 0.6; }
+.layer-item .layer-vis:hover { opacity: 1; }
+.layer-item .layer-name { flex: 1; }
+
+/* Grid overlay toggle */
+.toggle-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 11px; }
+.toggle-row input[type=checkbox] { accent-color: var(--accent); }
+
+/* Export format selector */
+.export-row { display: flex; gap: 6px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Header -->
+  <div class="header">
+    <h1>⬛ <span>TIDBYT</span> STUDIO</h1>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span style="font-size:11px;color:var(--text-dim)">64×32 LED Matrix Designer</span>
+      <button class="btn" onclick="showHelp()">?</button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <!-- Left Panel: Tools -->
+    <div class="panel">
+      <div class="panel-title">🛠 Tools</div>
+      <div class="panel-body">
+        <!-- Drawing Tools -->
+        <div class="tool-section">
+          <h3>Draw</h3>
+          <div class="tool-grid">
+            <button class="tool-btn active" data-tool="pencil" title="Pencil" onclick="setTool('pencil')">✏️</button>
+            <button class="tool-btn" data-tool="eraser" title="Eraser" onclick="setTool('eraser')">🧹</button>
+            <button class="tool-btn" data-tool="fill" title="Fill" onclick="setTool('fill')">🪣</button>
+            <button class="tool-btn" data-tool="picker" title="Color Picker" onclick="setTool('picker')">💉</button>
+            <button class="tool-btn" data-tool="line" title="Line" onclick="setTool('line')">📏</button>
+            <button class="tool-btn" data-tool="rect" title="Rectangle" onclick="setTool('rect')">⬜</button>
+            <button class="tool-btn" data-tool="fillrect" title="Filled Rect" onclick="setTool('fillrect')">🟦</button>
+            <button class="tool-btn" data-tool="circle" title="Circle" onclick="setTool('circle')">⭕</button>
+          </div>
+        </div>
+
+        <!-- Brush Size -->
+        <div class="tool-section">
+          <h3>Brush Size</h3>
+          <input type="range" min="1" max="5" value="1" id="brushSize" style="width:100%;accent-color:var(--accent);">
+        </div>
+
+        <!-- Colors -->
+        <div class="tool-section">
+          <h3>Color</h3>
+          <div class="color-row">
+            <div class="color-swatch active" id="fgSwatch" style="background:#fff" onclick="document.getElementById('fgColor').click()"></div>
+            <input type="color" id="fgColor" value="#ffffff" class="color-input" style="display:none" oninput="updateColor(this.value)">
+            <input type="text" id="fgHex" value="#ffffff" style="width:80px;padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:inherit;font-size:11px;" oninput="updateColorHex(this.value)">
+            <div class="color-swatch" id="bgSwatch" style="background:#000" onclick="document.getElementById('bgColor').click()"></div>
+            <input type="color" id="bgColor" value="#000000" style="display:none" oninput="updateBgColor(this.value)">
+          </div>
+          <div class="palette" id="palette"></div>
+        </div>
+
+        <!-- Options -->
+        <div class="tool-section">
+          <h3>Options</h3>
+          <div class="toggle-row">
+            <input type="checkbox" id="gridToggle" checked onchange="render()">
+            <label for="gridToggle">Show Grid</label>
+          </div>
+          <div class="toggle-row">
+            <input type="checkbox" id="mirrorX" onchange="render()">
+            <label for="mirrorX">Mirror X</label>
+          </div>
+          <div class="toggle-row">
+            <input type="checkbox" id="mirrorY" onchange="render()">
+            <label for="mirrorY">Mirror Y</label>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="tool-section">
+          <h3>Canvas</h3>
+          <div class="btn-row">
+            <button class="btn" onclick="clearCanvas()">Clear</button>
+            <button class="btn" onclick="undo()">↩ Undo</button>
+            <button class="btn" onclick="redo()">↪ Redo</button>
+          </div>
+          <div class="btn-row" style="margin-top:6px;">
+            <button class="btn" onclick="shiftCanvas(-1,0)">⬅</button>
+            <button class="btn" onclick="shiftCanvas(1,0)">➡</button>
+            <button class="btn" onclick="shiftCanvas(0,-1)">⬆</button>
+            <button class="btn" onclick="shiftCanvas(0,1)">⬇</button>
+            <button class="btn" onclick="flipH()">↔</button>
+            <button class="btn" onclick="flipV()">↕</button>
+          </div>
+        </div>
+
+        <!-- Import -->
+        <div class="tool-section">
+          <h3>Import</h3>
+          <div class="btn-row">
+            <button class="btn" onclick="importImage()">📁 Image</button>
+            <button class="btn" onclick="importText()">Aa Text</button>
+          </div>
+          <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="handleImageImport(event)">
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: Canvas -->
+    <div class="canvas-area">
+      <div class="canvas-container">
+        <canvas id="pixelCanvas" width="640" height="320"></canvas>
+      </div>
+      <div class="canvas-info">
+        <span id="coordInfo">X: 0  Y: 0</span>
+        <span id="colorInfo">Color: #000000</span>
+        <span id="frameInfo">Frame: 1/1</span>
+      </div>
+    </div>
+
+    <!-- Right Panel: Preview + Code + Push -->
+    <div class="panel">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('preview')">Preview</div>
+        <div class="tab" onclick="switchTab('frames')">Frames</div>
+        <div class="tab" onclick="switchTab('code')">Code</div>
+        <div class="tab" onclick="switchTab('push')">Push</div>
+      </div>
+      <div class="panel-body">
+        <!-- Preview Tab -->
+        <div class="tab-content active" id="tab-preview">
+          <div class="preview-section">
+            <div class="preview-display">
+              <canvas id="previewCanvas" width="128" height="64"></canvas>
+            </div>
+            <div class="btn-row">
+              <button class="btn" onclick="togglePreviewAnim()">▶ Animate</button>
+              <button class="btn" onclick="updatePreview()">🔄 Refresh</button>
+            </div>
+          </div>
+
+          <!-- Quick Widgets -->
+          <div class="tool-section">
+            <h3>Quick Add</h3>
+            <div class="widget-card" onclick="addTextWidget()">
+              <h4>📝 Text Overlay</h4>
+              <p>Add scrolling or static text</p>
+            </div>
+            <div class="widget-card" onclick="addShapeWidget()">
+              <h4>🔷 Shape</h4>
+              <p>Add a rectangle, circle, or line</p>
+            </div>
+            <div class="widget-card" onclick="addGradient()">
+              <h4>🌈 Gradient Fill</h4>
+              <p>Fill canvas with a gradient</p>
+            </div>
+            <div class="widget-card" onclick="addNoise()">
+              <h4>✨ Noise</h4>
+              <p>Generate random pixel noise</p>
+            </div>
+            <div class="widget-card" onclick="addCheckerboard()">
+              <h4>🏁 Checkerboard</h4>
+              <p>Generate a checkerboard pattern</p>
+            </div>
+          </div>
+
+          <!-- Export -->
+          <div class="tool-section">
+            <h3>Export</h3>
+            <div class="btn-row">
+              <button class="btn" onclick="exportPNG()">PNG</button>
+              <button class="btn" onclick="exportWebP()">WebP</button>
+              <button class="btn" onclick="exportGIF()">GIF (anim)</button>
+              <button class="btn" onclick="exportStarlark()">⭐ Starlark</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Frames Tab -->
+        <div class="tab-content" id="tab-frames">
+          <div class="tool-section">
+            <h3>Animation Frames</h3>
+            <div class="frames-bar" id="framesBar"></div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="addFrame()">+ Frame</button>
+              <button class="btn" onclick="dupFrame()">⧉ Duplicate</button>
+              <button class="btn btn-danger" onclick="delFrame()">🗑 Delete</button>
+            </div>
+            <div class="input-group" style="margin-top:10px;">
+              <label>Frame Delay (ms)</label>
+              <input type="number" id="frameDelay" value="100" min="10" max="5000" step="10">
+            </div>
+            <div class="input-group">
+              <label>Onion Skin</label>
+              <div class="toggle-row">
+                <input type="checkbox" id="onionSkin" onchange="render()">
+                <label for="onionSkin">Show previous frame</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Code Tab -->
+        <div class="tab-content" id="tab-code">
+          <div class="tool-section">
+            <h3>Starlark Code</h3>
+            <p style="font-size:10px;color:var(--text-dim);margin-bottom:8px;">
+              Write Pixlet-compatible Starlark. Use "Generate from Canvas" to auto-generate.
+            </p>
+            <div class="code-editor">
+              <textarea id="codeEditor" spellcheck="false">load("render.star", "render")
+load("encoding/base64.star", "base64")
+
+def main(config):
+    # Your canvas image will be embedded here
+    return render.Root(
+        child = render.Box(
+            child = render.Text("Hello!"),
+        ),
+    )
+</textarea>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="generateStarlark()">⚡ Generate from Canvas</button>
+              <button class="btn" onclick="copyCode()">📋 Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Push Tab -->
+        <div class="tab-content" id="tab-push">
+          <div class="tool-section">
+            <h3>Push to Tidbyt</h3>
+            <p style="font-size:10px;color:var(--text-dim);margin-bottom:12px;">
+              Push your creation directly to your Tidbyt device via API.
+              Get your API key from the Tidbyt app → Device Settings → Get API Key.
+            </p>
+            <div class="input-group">
+              <label>Device ID</label>
+              <input type="text" id="deviceId" placeholder="e.g. oddly-impressive-llama-f3a" oninput="savePushConfig()">
+            </div>
+            <div class="input-group">
+              <label>API Token</label>
+              <input type="password" id="apiToken" placeholder="Your Tidbyt API token" oninput="savePushConfig()">
+            </div>
+            <div class="input-group">
+              <label>Installation ID (optional)</label>
+              <input type="text" id="installId" placeholder="my-custom-app" oninput="savePushConfig()">
+            </div>
+            <div class="toggle-row">
+              <input type="checkbox" id="pushBackground">
+              <label for="pushBackground">Background (don't show immediately)</label>
+            </div>
+            <div class="btn-row" style="margin-top:12px;">
+              <button class="btn btn-success" onclick="pushToDevice()">🚀 Push to Device</button>
+            </div>
+            <div id="pushStatus" style="margin-top:10px;font-size:11px;"></div>
+          </div>
+
+          <div class="push-section">
+            <h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:8px;">Saved Devices</h3>
+            <div id="savedDevices"></div>
+            <button class="btn" onclick="saveDevice()" style="margin-top:6px;">💾 Save Current</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Text Modal -->
+<div id="textModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:none;align-items:center;justify-content:center;">
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;width:340px;">
+    <h3 style="margin-bottom:12px;font-size:14px;">Add Text</h3>
+    <div class="input-group">
+      <label>Text</label>
+      <input type="text" id="textInput" value="Hello!" placeholder="Enter text">
+    </div>
+    <div class="input-group">
+      <label>Font Size</label>
+      <select id="textFont">
+        <option value="5">5px (tiny)</option>
+        <option value="8" selected>8px (default)</option>
+        <option value="10">10px</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Position X</label>
+      <input type="number" id="textX" value="0" min="0" max="63">
+    </div>
+    <div class="input-group">
+      <label>Position Y</label>
+      <input type="number" id="textY" value="12" min="0" max="31">
+    </div>
+    <div class="btn-row" style="margin-top:16px;">
+      <button class="btn btn-primary" onclick="stampText()">Stamp</button>
+      <button class="btn" onclick="closeTextModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Help Modal -->
+<div id="helpModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;align-items:center;justify-content:center;">
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;width:500px;max-height:80vh;overflow-y:auto;">
+    <h3 style="margin-bottom:12px;font-size:16px;color:var(--accent2);">⬛ Tidbyt Studio — Help</h3>
+    <div style="font-size:12px;line-height:1.8;">
+      <p><strong>Canvas:</strong> 64×32 pixel grid matching the Tidbyt LED matrix.</p>
+      <p><strong>Tools:</strong> Pencil, eraser, fill, color picker, line, rect, filled rect, circle.</p>
+      <p><strong>Shortcuts:</strong></p>
+      <ul style="padding-left:16px;">
+        <li><code>B</code> — Pencil</li>
+        <li><code>E</code> — Eraser</li>
+        <li><code>G</code> — Fill</li>
+        <li><code>I</code> — Color Picker</li>
+        <li><code>L</code> — Line</li>
+        <li><code>R</code> — Rectangle</li>
+        <li><code>Ctrl+Z</code> — Undo</li>
+        <li><code>Ctrl+Y</code> — Redo</li>
+        <li><code>Ctrl+S</code> — Export PNG</li>
+      </ul>
+      <p><strong>Frames:</strong> Create animation frames, set delay, export as animated WebP/GIF.</p>
+      <p><strong>Push:</strong> Enter your Device ID + API Token from the Tidbyt app to push directly.</p>
+      <p><strong>Starlark:</strong> Generate Pixlet-compatible code to use with <code>pixlet render</code>.</p>
+      <p style="margin-top:12px;color:var(--text-dim);">API: POST to <code>api.tidbyt.com/v0/devices/{id}/push</code> with base64 WebP.</p>
+    </div>
+    <button class="btn" onclick="closeHelp()" style="margin-top:16px;">Close</button>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+const W = 64, H = 32;
+const PIXEL_SIZE = 10;
+let currentTool = 'pencil';
+let fgColor = '#ffffff';
+let bgColor = '#000000';
+let frames = [createEmptyFrame()];
+let currentFrame = 0;
+let undoStack = [];
+let redoStack = [];
+let isDrawing = false;
+let lastX = -1, lastY = -1;
+let shapeStart = null;
+let animInterval = null;
+
+const canvas = document.getElementById('pixelCanvas');
+const ctx = canvas.getContext('2d');
+const previewCanvas = document.getElementById('previewCanvas');
+const previewCtx = previewCanvas.getContext('2d');
+
+// ===== PALETTE =====
+const PALETTE = [
+  '#000000','#1a1a2e','#16213e','#0f3460','#533483','#e94560','#ff6b6b','#ffa502',
+  '#ff6348','#ff4757','#2ed573','#1dd1a1','#00d2d3','#54a0ff','#5f27cd','#341f97',
+  '#ffffff','#dfe6e9','#b2bec3','#636e72','#2d3436','#fdcb6e','#f6e58d','#f9ca24',
+  '#badc58','#6ab04c','#22a6b3','#30336b','#eb4d4b','#e056fd','#686de0','#4834d4',
+  '#c0392b','#e74c3c','#d35400','#e67e22','#f39c12','#27ae60','#2ecc71','#1abc9c',
+  '#2980b9','#3498db','#8e44ad','#9b59b6','#2c3e50','#34495e','#7f8c8d','#95a5a6',
+];
+
+function initPalette() {
+  const el = document.getElementById('palette');
+  el.innerHTML = PALETTE.map(c =>
+    `<div class="palette-color" style="background:${c}" onclick="updateColor('${c}')"></div>`
+  ).join('');
+}
+
+// ===== FRAME MANAGEMENT =====
+function createEmptyFrame() {
+  const data = new Array(W * H);
+  for (let i = 0; i < data.length; i++) data[i] = null; // null = transparent/off
+  return data;
+}
+
+function getPixel(x, y, frame) {
+  const f = frame !== undefined ? frames[frame] : frames[currentFrame];
+  return f[y * W + x];
+}
+
+function setPixel(x, y, color) {
+  const f = frames[currentFrame];
+  if (x >= 0 && x < W && y >= 0 && y < H) {
+    f[y * W + x] = color;
+    // Mirror
+    if (document.getElementById('mirrorX').checked) {
+      f[y * W + (W - 1 - x)] = color;
+    }
+    if (document.getElementById('mirrorY').checked) {
+      f[(H - 1 - y) * W + x] = color;
+    }
+    if (document.getElementById('mirrorX').checked && document.getElementById('mirrorY').checked) {
+      f[(H - 1 - y) * W + (W - 1 - x)] = color;
+    }
+  }
+}
+
+// ===== RENDERING =====
+function render() {
+  const showGrid = document.getElementById('gridToggle').checked;
+  const gap = showGrid ? 1 : 0;
+  const cellSize = PIXEL_SIZE;
+  
+  canvas.width = W * cellSize + (showGrid ? W - 1 : 0);
+  canvas.height = H * cellSize + (showGrid ? H - 1 : 0);
+  
+  ctx.fillStyle = '#111';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Onion skin
+  if (document.getElementById('onionSkin')?.checked && currentFrame > 0) {
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        const c = getPixel(x, y, currentFrame - 1);
+        if (c) {
+          ctx.globalAlpha = 0.2;
+          ctx.fillStyle = c;
+          ctx.fillRect(x * (cellSize + gap), y * (cellSize + gap), cellSize, cellSize);
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const c = getPixel(x, y);
+      ctx.fillStyle = c || '#0a0a0f';
+      ctx.fillRect(x * (cellSize + gap), y * (cellSize + gap), cellSize, cellSize);
+    }
+  }
+
+  updatePreview();
+  updateFrameBar();
+}
+
+function updatePreview() {
+  previewCtx.fillStyle = '#000';
+  previewCtx.fillRect(0, 0, 128, 64);
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const c = getPixel(x, y);
+      if (c) {
+        previewCtx.fillStyle = c;
+        previewCtx.fillRect(x * 2, y * 2, 2, 2);
+      }
+    }
+  }
+}
+
+// ===== TOOLS =====
+function setTool(tool) {
+  currentTool = tool;
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.toggle('active', b.dataset.tool === tool));
+}
+
+function updateColor(c) {
+  fgColor = c;
+  document.getElementById('fgSwatch').style.background = c;
+  document.getElementById('fgColor').value = c;
+  document.getElementById('fgHex').value = c;
+}
+
+function updateColorHex(val) {
+  if (/^#[0-9a-fA-F]{6}$/.test(val)) updateColor(val);
+}
+
+function updateBgColor(c) {
+  bgColor = c;
+  document.getElementById('bgSwatch').style.background = c;
+}
+
+function saveState() {
+  undoStack.push(frames.map(f => [...f]));
+  if (undoStack.length > 50) undoStack.shift();
+  redoStack = [];
+}
+
+function undo() {
+  if (!undoStack.length) return;
+  redoStack.push(frames.map(f => [...f]));
+  frames = undoStack.pop();
+  render();
+}
+
+function redo() {
+  if (!redoStack.length) return;
+  undoStack.push(frames.map(f => [...f]));
+  frames = redoStack.pop();
+  render();
+}
+
+function getCanvasCoords(e) {
+  const rect = canvas.getBoundingClientRect();
+  const showGrid = document.getElementById('gridToggle').checked;
+  const gap = showGrid ? 1 : 0;
+  const cellSize = PIXEL_SIZE;
+  const totalCell = cellSize + gap;
+  const x = Math.floor((e.clientX - rect.left) / totalCell);
+  const y = Math.floor((e.clientY - rect.top) / totalCell);
+  return [Math.max(0, Math.min(W - 1, x)), Math.max(0, Math.min(H - 1, y))];
+}
+
+// Drawing handlers
+canvas.addEventListener('mousedown', e => {
+  const [x, y] = getCanvasCoords(e);
+  isDrawing = true;
+  saveState();
+  
+  if (currentTool === 'pencil') {
+    setPixel(x, y, fgColor);
+    lastX = x; lastY = y;
+  } else if (currentTool === 'eraser') {
+    setPixel(x, y, null);
+    lastX = x; lastY = y;
+  } else if (currentTool === 'fill') {
+    floodFill(x, y, fgColor);
+  } else if (currentTool === 'picker') {
+    const c = getPixel(x, y);
+    if (c) updateColor(c);
+  } else if (['line','rect','fillrect','circle'].includes(currentTool)) {
+    shapeStart = [x, y];
+    lastX = x; lastY = y;
+  }
+  render();
+});
+
+canvas.addEventListener('mousemove', e => {
+  const [x, y] = getCanvasCoords(e);
+  document.getElementById('coordInfo').textContent = `X: ${x}  Y: ${y}`;
+  const c = getPixel(x, y);
+  document.getElementById('colorInfo').textContent = `Color: ${c || 'empty'}`;
+  
+  if (!isDrawing) return;
+  
+  if (currentTool === 'pencil') {
+    bresenhamLine(lastX, lastY, x, y, fgColor);
+    lastX = x; lastY = y;
+  } else if (currentTool === 'eraser') {
+    bresenhamLine(lastX, lastY, x, y, null);
+    lastX = x; lastY = y;
+  }
+  render();
+});
+
+canvas.addEventListener('mouseup', e => {
+  if (!isDrawing) return;
+  const [x, y] = getCanvasCoords(e);
+  
+  if (shapeStart) {
+    const [sx, sy] = shapeStart;
+    if (currentTool === 'line') {
+      bresenhamLine(sx, sy, x, y, fgColor);
+    } else if (currentTool === 'rect') {
+      drawRect(sx, sy, x, y, fgColor, false);
+    } else if (currentTool === 'fillrect') {
+      drawRect(sx, sy, x, y, fgColor, true);
+    } else if (currentTool === 'circle') {
+      drawCircle(sx, sy, Math.max(Math.abs(x-sx), Math.abs(y-sy)), fgColor);
+    }
+    shapeStart = null;
+  }
+  isDrawing = false;
+  render();
+});
+
+canvas.addEventListener('mouseleave', () => { isDrawing = false; shapeStart = null; });
+
+// ===== DRAWING ALGORITHMS =====
+function bresenhamLine(x0, y0, x1, y1, color) {
+  const dx = Math.abs(x1 - x0), dy = Math.abs(y1 - y0);
+  const sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+  let err = dx - dy;
+  while (true) {
+    setPixel(x0, y0, color);
+    if (x0 === x1 && y0 === y1) break;
+    const e2 = 2 * err;
+    if (e2 > -dy) { err -= dy; x0 += sx; }
+    if (e2 < dx) { err += dx; y0 += sy; }
+  }
+}
+
+function drawRect(x0, y0, x1, y1, color, filled) {
+  const minX = Math.min(x0,x1), maxX = Math.max(x0,x1);
+  const minY = Math.min(y0,y1), maxY = Math.max(y0,y1);
+  if (filled) {
+    for (let y = minY; y <= maxY; y++)
+      for (let x = minX; x <= maxX; x++) setPixel(x, y, color);
+  } else {
+    for (let x = minX; x <= maxX; x++) { setPixel(x, minY, color); setPixel(x, maxY, color); }
+    for (let y = minY; y <= maxY; y++) { setPixel(minX, y, color); setPixel(maxX, y, color); }
+  }
+}
+
+function drawCircle(cx, cy, r, color) {
+  let x = r, y = 0, err = 1 - r;
+  while (x >= y) {
+    setPixel(cx+x,cy+y,color); setPixel(cx-x,cy+y,color);
+    setPixel(cx+x,cy-y,color); setPixel(cx-x,cy-y,color);
+    setPixel(cx+y,cy+x,color); setPixel(cx-y,cy+x,color);
+    setPixel(cx+y,cy-x,color); setPixel(cx-y,cy-x,color);
+    y++;
+    if (err < 0) { err += 2*y+1; } else { x--; err += 2*(y-x)+1; }
+  }
+}
+
+function floodFill(startX, startY, newColor) {
+  const f = frames[currentFrame];
+  const target = f[startY * W + startX];
+  if (target === newColor) return;
+  const stack = [[startX, startY]];
+  const visited = new Set();
+  while (stack.length) {
+    const [x, y] = stack.pop();
+    const key = y * W + x;
+    if (x < 0 || x >= W || y < 0 || y >= H) continue;
+    if (visited.has(key)) continue;
+    if (f[key] !== target) continue;
+    visited.add(key);
+    f[key] = newColor;
+    stack.push([x+1,y],[x-1,y],[x,y+1],[x,y-1]);
+  }
+}
+
+// ===== FRAME MANAGEMENT =====
+function updateFrameBar() {
+  const bar = document.getElementById('framesBar');
+  bar.innerHTML = '';
+  frames.forEach((f, i) => {
+    const thumb = document.createElement('div');
+    thumb.className = 'frame-thumb' + (i === currentFrame ? ' active' : '');
+    const tc = document.createElement('canvas');
+    tc.width = 64; tc.height = 32;
+    const tctx = tc.getContext('2d');
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        const c = f[y * W + x];
+        if (c) { tctx.fillStyle = c; tctx.fillRect(x, y, 1, 1); }
+      }
+    }
+    thumb.appendChild(tc);
+    thumb.onclick = () => { currentFrame = i; render(); updateFrameInfo(); };
+    bar.appendChild(thumb);
+  });
+  updateFrameInfo();
+}
+
+function updateFrameInfo() {
+  document.getElementById('frameInfo').textContent = `Frame: ${currentFrame+1}/${frames.length}`;
+}
+
+function addFrame() { saveState(); frames.push(createEmptyFrame()); currentFrame = frames.length-1; render(); }
+function dupFrame() { saveState(); frames.push([...frames[currentFrame]]); currentFrame = frames.length-1; render(); }
+function delFrame() {
+  if (frames.length <= 1) return;
+  saveState(); frames.splice(currentFrame, 1);
+  if (currentFrame >= frames.length) currentFrame = frames.length - 1;
+  render();
+}
+
+// ===== CANVAS OPERATIONS =====
+function clearCanvas() { saveState(); frames[currentFrame] = createEmptyFrame(); render(); }
+
+function shiftCanvas(dx, dy) {
+  saveState();
+  const f = frames[currentFrame];
+  const nf = createEmptyFrame();
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const nx = (x + dx + W) % W, ny = (y + dy + H) % H;
+      nf[ny * W + nx] = f[y * W + x];
+    }
+  }
+  frames[currentFrame] = nf;
+  render();
+}
+
+function flipH() {
+  saveState();
+  const f = frames[currentFrame];
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W / 2; x++) {
+      const tmp = f[y*W+x];
+      f[y*W+x] = f[y*W+(W-1-x)];
+      f[y*W+(W-1-x)] = tmp;
+    }
+  }
+  render();
+}
+
+function flipV() {
+  saveState();
+  const f = frames[currentFrame];
+  for (let x = 0; x < W; x++) {
+    for (let y = 0; y < H / 2; y++) {
+      const tmp = f[y*W+x];
+      f[y*W+x] = f[(H-1-y)*W+x];
+      f[(H-1-y)*W+x] = tmp;
+    }
+  }
+  render();
+}
+
+// ===== WIDGETS =====
+function addTextWidget() {
+  document.getElementById('textModal').style.display = 'flex';
+}
+
+function closeTextModal() {
+  document.getElementById('textModal').style.display = 'none';
+}
+
+function stampText() {
+  const text = document.getElementById('textInput').value;
+  const fontSize = parseInt(document.getElementById('textFont').value);
+  const tx = parseInt(document.getElementById('textX').value);
+  const ty = parseInt(document.getElementById('textY').value);
+  
+  saveState();
+  // Render text to temp canvas then sample pixels
+  const tc = document.createElement('canvas');
+  tc.width = W; tc.height = H;
+  const tctx = tc.getContext('2d');
+  tctx.fillStyle = fgColor;
+  tctx.font = `${fontSize}px monospace`;
+  tctx.textBaseline = 'top';
+  tctx.fillText(text, tx, ty);
+  
+  const imgData = tctx.getImageData(0, 0, W, H);
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const i = (y * W + x) * 4;
+      if (imgData.data[i + 3] > 128) {
+        const r = imgData.data[i], g = imgData.data[i+1], b = imgData.data[i+2];
+        setPixel(x, y, `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`);
+      }
+    }
+  }
+  closeTextModal();
+  render();
+}
+
+function addShapeWidget() {
+  toast('Select Rectangle or Circle tool and draw on canvas', 'info');
+  setTool('fillrect');
+}
+
+function addGradient() {
+  saveState();
+  const c1 = hexToRgb(fgColor);
+  const c2 = hexToRgb(bgColor);
+  for (let x = 0; x < W; x++) {
+    const t = x / (W - 1);
+    const r = Math.round(c1.r + (c2.r - c1.r) * t);
+    const g = Math.round(c1.g + (c2.g - c1.g) * t);
+    const b = Math.round(c1.b + (c2.b - c1.b) * t);
+    const color = rgbToHex(r, g, b);
+    for (let y = 0; y < H; y++) setPixel(x, y, color);
+  }
+  render();
+  toast('Gradient applied (FG → BG color)', 'success');
+}
+
+function addNoise() {
+  saveState();
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      if (Math.random() > 0.5) {
+        const r = Math.floor(Math.random()*256);
+        const g = Math.floor(Math.random()*256);
+        const b = Math.floor(Math.random()*256);
+        setPixel(x, y, rgbToHex(r, g, b));
+      }
+    }
+  }
+  render();
+}
+
+function addCheckerboard() {
+  saveState();
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      setPixel(x, y, (x + y) % 2 === 0 ? fgColor : bgColor);
+    }
+  }
+  render();
+}
+
+// ===== IMPORT =====
+function importImage() { document.getElementById('imageInput').click(); }
+
+function handleImageImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const img = new Image();
+  img.onload = () => {
+    saveState();
+    const tc = document.createElement('canvas');
+    tc.width = W; tc.height = H;
+    const tctx = tc.getContext('2d');
+    tctx.imageSmoothingEnabled = false;
+    // Scale to fit
+    const scale = Math.min(W / img.width, H / img.height);
+    const w = Math.round(img.width * scale);
+    const h = Math.round(img.height * scale);
+    const ox = Math.floor((W - w) / 2);
+    const oy = Math.floor((H - h) / 2);
+    tctx.drawImage(img, ox, oy, w, h);
+    
+    const imgData = tctx.getImageData(0, 0, W, H);
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        const i = (y * W + x) * 4;
+        const a = imgData.data[i + 3];
+        if (a > 32) {
+          const r = imgData.data[i], g = imgData.data[i+1], b = imgData.data[i+2];
+          frames[currentFrame][y * W + x] = rgbToHex(r, g, b);
+        }
+      }
+    }
+    render();
+    toast('Image imported!', 'success');
+  };
+  img.src = URL.createObjectURL(file);
+  e.target.value = '';
+}
+
+function importText() { addTextWidget(); }
+
+// ===== ANIMATION =====
+function togglePreviewAnim() {
+  if (animInterval) {
+    clearInterval(animInterval);
+    animInterval = null;
+    return;
+  }
+  if (frames.length < 2) { toast('Add more frames first', 'info'); return; }
+  let fi = 0;
+  const delay = parseInt(document.getElementById('frameDelay').value) || 100;
+  animInterval = setInterval(() => {
+    previewCtx.fillStyle = '#000';
+    previewCtx.fillRect(0, 0, 128, 64);
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        const c = frames[fi][y * W + x];
+        if (c) { previewCtx.fillStyle = c; previewCtx.fillRect(x*2, y*2, 2, 2); }
+      }
+    }
+    fi = (fi + 1) % frames.length;
+  }, delay);
+}
+
+// ===== EXPORT =====
+function getFrameImageData(frameIdx) {
+  const tc = document.createElement('canvas');
+  tc.width = W; tc.height = H;
+  const tctx = tc.getContext('2d');
+  tctx.fillStyle = '#000';
+  tctx.fillRect(0, 0, W, H);
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const c = frames[frameIdx][y * W + x];
+      if (c) { tctx.fillStyle = c; tctx.fillRect(x, y, 1, 1); }
+    }
+  }
+  return tc;
+}
+
+function exportPNG() {
+  const tc = getFrameImageData(currentFrame);
+  const link = document.createElement('a');
+  link.download = 'tidbyt-frame.png';
+  link.href = tc.toDataURL('image/png');
+  link.click();
+  toast('PNG exported!', 'success');
+}
+
+function exportWebP() {
+  const tc = getFrameImageData(currentFrame);
+  const link = document.createElement('a');
+  link.download = 'tidbyt-frame.webp';
+  link.href = tc.toDataURL('image/webp');
+  link.click();
+  toast('WebP exported!', 'success');
+}
+
+function exportGIF() {
+  // For multi-frame, we'll create an animated sequence export as individual PNGs
+  // (true GIF encoding requires a library — offer frames as a zip-like download)
+  if (frames.length === 1) {
+    exportPNG();
+    return;
+  }
+  // Export each frame as individual PNG with numbered names
+  frames.forEach((f, i) => {
+    const tc = getFrameImageData(i);
+    const link = document.createElement('a');
+    link.download = `tidbyt-frame-${String(i).padStart(3,'0')}.png`;
+    link.href = tc.toDataURL('image/png');
+    link.click();
+  });
+  toast(`Exported ${frames.length} frames as PNGs`, 'success');
+}
+
+function exportStarlark() {
+  generateStarlark();
+  switchTab('code');
+  toast('Starlark code generated!', 'success');
+}
+
+// ===== STARLARK GENERATION =====
+function generateStarlark() {
+  const tc = getFrameImageData(currentFrame);
+  const b64 = tc.toDataURL('image/png').split(',')[1];
+  
+  let code = `load("render.star", "render")
+load("encoding/base64.star", "base64")
+
+# Auto-generated by Tidbyt Studio
+IMG_DATA = base64.decode("""
+${b64}
+""")
+
+def main(config):
+    return render.Root(
+        child = render.Image(
+            src = IMG_DATA,
+            width = 64,
+            height = 32,
+        ),
+    )
+`;
+  
+  if (frames.length > 1) {
+    const allB64 = frames.map((f, i) => {
+      const tc = getFrameImageData(i);
+      return tc.toDataURL('image/png').split(',')[1];
+    });
+    
+    code = `load("render.star", "render")
+load("encoding/base64.star", "base64")
+
+# Auto-generated by Tidbyt Studio
+# Animation with ${frames.length} frames
+FRAMES = [
+${allB64.map((b, i) => `    base64.decode("""${b}"""),  # Frame ${i+1}`).join('\n')}
+]
+
+def main(config):
+    return render.Root(
+        delay = ${document.getElementById('frameDelay').value},
+        child = render.Animation(
+            children = [
+                render.Image(src = f, width = 64, height = 32)
+                for f in FRAMES
+            ],
+        ),
+    )
+`;
+  }
+  
+  document.getElementById('codeEditor').value = code;
+}
+
+function copyCode() {
+  const code = document.getElementById('codeEditor').value;
+  navigator.clipboard.writeText(code);
+  toast('Code copied to clipboard!', 'success');
+}
+
+// ===== PUSH TO DEVICE =====
+function savePushConfig() {
+  const cfg = {
+    deviceId: document.getElementById('deviceId').value,
+    apiToken: document.getElementById('apiToken').value,
+    installId: document.getElementById('installId').value,
+  };
+  localStorage.setItem('tidbyt-push-config', JSON.stringify(cfg));
+}
+
+function loadPushConfig() {
+  try {
+    const cfg = JSON.parse(localStorage.getItem('tidbyt-push-config') || '{}');
+    if (cfg.deviceId) document.getElementById('deviceId').value = cfg.deviceId;
+    if (cfg.apiToken) document.getElementById('apiToken').value = cfg.apiToken;
+    if (cfg.installId) document.getElementById('installId').value = cfg.installId;
+  } catch(e) {}
+}
+
+async function pushToDevice() {
+  const deviceId = document.getElementById('deviceId').value.trim();
+  const apiToken = document.getElementById('apiToken').value.trim();
+  const installId = document.getElementById('installId').value.trim();
+  const background = document.getElementById('pushBackground').checked;
+  const status = document.getElementById('pushStatus');
+  
+  if (!deviceId || !apiToken) {
+    status.innerHTML = '<span style="color:var(--danger)">❌ Device ID and API Token required</span>';
+    return;
+  }
+  
+  status.innerHTML = '<span style="color:var(--accent)">⏳ Generating image...</span>';
+  
+  // Generate WebP
+  const tc = getFrameImageData(currentFrame);
+  
+  // If multiple frames, create animation - for now just push single frame
+  const blob = await new Promise(r => tc.toBlob(r, 'image/webp'));
+  const buf = await blob.arrayBuffer();
+  const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+  
+  status.innerHTML = '<span style="color:var(--accent)">⏳ Pushing to device...</span>';
+  
+  try {
+    const payload = {
+      deviceID: deviceId,
+      image: b64,
+      installationID: installId || `tidbyt-studio-${Date.now()}`,
+      background: background,
+    };
+    
+    // Use CORS proxy or direct (Tidbyt API supports CORS)
+    const resp = await fetch(`https://api.tidbyt.com/v0/devices/${deviceId}/push`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+    
+    if (resp.ok) {
+      status.innerHTML = '<span style="color:var(--success)">✅ Pushed successfully!</span>';
+      toast('Image pushed to Tidbyt!', 'success');
+    } else {
+      const err = await resp.text();
+      status.innerHTML = `<span style="color:var(--danger)">❌ Error ${resp.status}: ${err}</span>`;
+    }
+  } catch (e) {
+    status.innerHTML = `<span style="color:var(--danger)">❌ ${e.message}<br><br>
+    <span style="color:var(--text-dim);font-size:10px;">If blocked by CORS, use the CLI:<br>
+    <code>curl -X POST "https://api.tidbyt.com/v0/devices/${deviceId}/push" \\<br>
+    -H "Authorization: Bearer YOUR_TOKEN" \\<br>
+    -d '{"image":"BASE64_WEBP","installationID":"my-app"}'</code></span></span>`;
+  }
+}
+
+function saveDevice() {
+  const deviceId = document.getElementById('deviceId').value.trim();
+  const name = prompt('Name this device:', deviceId);
+  if (!name) return;
+  const devices = JSON.parse(localStorage.getItem('tidbyt-devices') || '[]');
+  devices.push({ name, deviceId, apiToken: document.getElementById('apiToken').value });
+  localStorage.setItem('tidbyt-devices', JSON.stringify(devices));
+  renderSavedDevices();
+}
+
+function renderSavedDevices() {
+  const devices = JSON.parse(localStorage.getItem('tidbyt-devices') || '[]');
+  const el = document.getElementById('savedDevices');
+  el.innerHTML = devices.map((d, i) => `
+    <div class="layer-item" onclick="loadDevice(${i})">
+      <span class="layer-name">${d.name}</span>
+      <span style="cursor:pointer;color:var(--danger)" onclick="event.stopPropagation();removeDevice(${i})">✕</span>
+    </div>
+  `).join('');
+}
+
+function loadDevice(i) {
+  const devices = JSON.parse(localStorage.getItem('tidbyt-devices') || '[]');
+  const d = devices[i];
+  document.getElementById('deviceId').value = d.deviceId;
+  document.getElementById('apiToken').value = d.apiToken;
+  toast(`Loaded device: ${d.name}`, 'success');
+}
+
+function removeDevice(i) {
+  const devices = JSON.parse(localStorage.getItem('tidbyt-devices') || '[]');
+  devices.splice(i, 1);
+  localStorage.setItem('tidbyt-devices', JSON.stringify(devices));
+  renderSavedDevices();
+}
+
+// ===== TABS =====
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase() === name));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.toggle('active', t.id === `tab-${name}`));
+}
+
+// ===== UTILS =====
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return {r,g,b};
+}
+
+function rgbToHex(r,g,b) {
+  return '#' + [r,g,b].map(c => c.toString(16).padStart(2,'0')).join('');
+}
+
+function toast(msg, type='info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+function showHelp() { document.getElementById('helpModal').style.display = 'flex'; }
+function closeHelp() { document.getElementById('helpModal').style.display = 'none'; }
+
+// ===== KEYBOARD SHORTCUTS =====
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.ctrlKey && e.key === 'z') { e.preventDefault(); undo(); }
+  else if (e.ctrlKey && e.key === 'y') { e.preventDefault(); redo(); }
+  else if (e.ctrlKey && e.key === 's') { e.preventDefault(); exportPNG(); }
+  else if (e.key === 'b') setTool('pencil');
+  else if (e.key === 'e') setTool('eraser');
+  else if (e.key === 'g') setTool('fill');
+  else if (e.key === 'i') setTool('picker');
+  else if (e.key === 'l') setTool('line');
+  else if (e.key === 'r') setTool('rect');
+});
+
+// ===== SAVE/LOAD PROJECT =====
+function saveProject() {
+  const data = { frames, currentFrame, fgColor, bgColor };
+  localStorage.setItem('tidbyt-studio-project', JSON.stringify(data));
+}
+
+function loadProject() {
+  try {
+    const data = JSON.parse(localStorage.getItem('tidbyt-studio-project'));
+    if (data && data.frames) {
+      frames = data.frames;
+      currentFrame = data.currentFrame || 0;
+      if (data.fgColor) updateColor(data.fgColor);
+      if (data.bgColor) { bgColor = data.bgColor; document.getElementById('bgSwatch').style.background = bgColor; }
+    }
+  } catch(e) {}
+}
+
+// Auto-save every 30s
+setInterval(saveProject, 30000);
+
+// ===== INIT =====
+initPalette();
+loadProject();
+loadPushConfig();
+renderSavedDevices();
+render();
+</script>
+</body>
+</html>
