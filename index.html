@@ -26,7 +26,6 @@ body {
   height: 100vh;
   overflow: hidden;
 }
-/* Layout */
 .app { display: grid; grid-template-rows: 48px 1fr; height: 100vh; }
 .header {
   display: flex; align-items: center; justify-content: space-between;
@@ -35,8 +34,6 @@ body {
 .header h1 { font-size: 16px; color: var(--accent2); letter-spacing: 2px; }
 .header h1 span { color: var(--accent); }
 .main { display: grid; grid-template-columns: 260px 1fr 320px; overflow: hidden; }
-
-/* Panels */
 .panel {
   background: var(--surface); border-right: 1px solid var(--border);
   display: flex; flex-direction: column; overflow: hidden;
@@ -48,8 +45,6 @@ body {
   font-weight: 700; flex-shrink: 0;
 }
 .panel-body { flex: 1; overflow-y: auto; padding: 12px; }
-
-/* Tools Panel */
 .tool-section { margin-bottom: 16px; }
 .tool-section h3 {
   font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
@@ -63,11 +58,6 @@ body {
 }
 .tool-btn:hover { border-color: var(--accent); background: #1a1a2e; }
 .tool-btn.active { border-color: var(--accent); background: var(--accent); color: #fff; }
-.tool-btn[title]:hover::after {
-  content: attr(title); position: absolute; /* handled via title attr */
-}
-
-/* Color */
 .color-row { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; }
 .color-swatch {
   width: 28px; height: 28px; border-radius: 4px; border: 2px solid var(--border);
@@ -81,8 +71,6 @@ body {
   border: 1px solid transparent; transition: border-color 0.1s;
 }
 .palette-color:hover { border-color: var(--text); }
-
-/* Canvas Area */
 .canvas-area {
   display: flex; flex-direction: column; align-items: center;
   justify-content: center; background: var(--bg); position: relative;
@@ -96,8 +84,6 @@ body {
   display: flex; gap: 16px; margin-top: 12px; font-size: 11px; color: var(--text-dim);
 }
 .canvas-info span { background: var(--surface); padding: 4px 10px; border-radius: 4px; }
-
-/* Preview */
 .preview-section { margin-bottom: 16px; }
 .preview-display {
   background: #000; border-radius: 12px; padding: 16px;
@@ -106,19 +92,13 @@ body {
   margin-bottom: 12px;
 }
 #previewCanvas { image-rendering: pixelated; border-radius: 4px; }
-
-/* Frames */
-.frames-bar {
-  display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px;
-}
+.frames-bar { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
 .frame-thumb {
   width: 40px; height: 20px; border: 2px solid var(--border); border-radius: 3px;
   cursor: pointer; image-rendering: pixelated; background: #000;
 }
 .frame-thumb.active { border-color: var(--accent); }
 .frame-thumb canvas { width: 100%; height: 100%; image-rendering: pixelated; }
-
-/* Buttons */
 .btn {
   padding: 8px 14px; border: 1px solid var(--border); border-radius: 6px;
   background: var(--surface2); color: var(--text); cursor: pointer;
@@ -132,8 +112,6 @@ body {
 .btn-danger:hover { background: var(--danger); color: #fff; }
 .btn-success { background: var(--success); border-color: var(--success); color: #000; }
 .btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
-
-/* Inputs */
 .input-group { margin-bottom: 10px; }
 .input-group label {
   display: block; font-size: 10px; text-transform: uppercase;
@@ -147,8 +125,6 @@ body {
 .input-group input:focus, .input-group textarea:focus {
   outline: none; border-color: var(--accent);
 }
-
-/* Widget Templates */
 .widget-card {
   background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
   padding: 10px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s;
@@ -156,8 +132,6 @@ body {
 .widget-card:hover { border-color: var(--accent); }
 .widget-card h4 { font-size: 12px; margin-bottom: 4px; }
 .widget-card p { font-size: 10px; color: var(--text-dim); }
-
-/* Starlark Editor */
 .code-editor {
   background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
   padding: 1px; margin-bottom: 12px; position: relative;
@@ -168,22 +142,17 @@ body {
   font-size: 11px; padding: 10px; resize: vertical; line-height: 1.5;
 }
 .code-editor textarea:focus { outline: none; }
-
-/* Push config */
 .push-section { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; }
-
-/* Tabs */
-.tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; overflow-x: auto; }
 .tab {
-  padding: 8px 14px; font-size: 11px; cursor: pointer; color: var(--text-dim);
+  padding: 8px 10px; font-size: 10px; cursor: pointer; color: var(--text-dim);
   border-bottom: 2px solid transparent; text-transform: uppercase; letter-spacing: 1px;
+  white-space: nowrap;
 }
 .tab:hover { color: var(--text); }
 .tab.active { color: var(--accent2); border-bottom-color: var(--accent2); }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-
-/* Toast */
 .toast {
   position: fixed; bottom: 20px; right: 20px; padding: 12px 20px;
   background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
@@ -193,45 +162,63 @@ body {
 .toast.show { transform: translateY(0); }
 .toast.success { border-color: var(--success); }
 .toast.error { border-color: var(--danger); }
-
-/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--surface); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-/* Responsive */
 @media (max-width: 900px) {
   .main { grid-template-columns: 1fr; }
   .panel { border: none; border-bottom: 1px solid var(--border); max-height: 40vh; }
 }
-
-/* Layer list */
 .layer-item {
   display: flex; align-items: center; gap: 8px; padding: 6px 8px;
   background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
   margin-bottom: 4px; font-size: 11px; cursor: pointer;
 }
 .layer-item.active { border-color: var(--accent); }
-.layer-item .layer-vis { cursor: pointer; opacity: 0.6; }
-.layer-item .layer-vis:hover { opacity: 1; }
 .layer-item .layer-name { flex: 1; }
-
-/* Grid overlay toggle */
 .toggle-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 11px; }
 .toggle-row input[type=checkbox] { accent-color: var(--accent); }
-
-/* Export format selector */
-.export-row { display: flex; gap: 6px; margin-bottom: 8px; }
-
-/* Community list */
 #communityList .widget-card h4 { color: var(--accent2); }
 #communityList .widget-card .btn { padding: 4px 8px; font-size: 10px; }
-.tab { padding: 8px 10px; font-size: 10px; }
+/* Device dashboard */
+.device-info-card {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px; margin-bottom: 12px;
+}
+.device-info-card h4 { font-size: 13px; color: var(--accent2); margin-bottom: 8px; }
+.device-info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 11px;
+}
+.device-info-row:last-child { border-bottom: none; }
+.device-info-row .label { color: var(--text-dim); }
+.install-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 10px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; margin-bottom: 4px; font-size: 11px;
+}
+.install-item .app-name { color: var(--accent2); font-weight: 600; }
+/* Schema config form */
+.schema-field { margin-bottom: 10px; padding: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; }
+.schema-field label { display: block; font-size: 11px; color: var(--accent2); margin-bottom: 4px; font-weight: 600; }
+.schema-field .field-desc { font-size: 9px; color: var(--text-dim); margin-bottom: 4px; }
+.schema-field input, .schema-field select {
+  width: 100%; padding: 6px 8px; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text); font-family: inherit; font-size: 11px;
+}
+.schema-field input[type=checkbox] { width: auto; }
+.schema-field.disabled { opacity: 0.5; }
+/* Message preview */
+#msgPreviewCanvas { image-rendering: pixelated; border-radius: 4px; background: #000; }
+.msg-preview-wrap {
+  background: #000; border-radius: 12px; padding: 12px;
+  display: flex; justify-content: center; align-items: center;
+  margin-bottom: 12px;
+}
 </style>
 </head>
 <body>
 <div class="app">
-  <!-- Header -->
   <div class="header">
     <h1>⬛ <span>TIDBYT</span> STUDIO</h1>
     <div style="display:flex;gap:8px;align-items:center;">
@@ -239,14 +226,11 @@ body {
       <button class="btn" onclick="showHelp()">?</button>
     </div>
   </div>
-
-  <!-- Main -->
   <div class="main">
     <!-- Left Panel: Tools -->
     <div class="panel">
       <div class="panel-title">🛠 Tools</div>
       <div class="panel-body">
-        <!-- Drawing Tools -->
         <div class="tool-section">
           <h3>Draw</h3>
           <div class="tool-grid">
@@ -260,14 +244,10 @@ body {
             <button class="tool-btn" data-tool="circle" title="Circle" onclick="setTool('circle')">⭕</button>
           </div>
         </div>
-
-        <!-- Brush Size -->
         <div class="tool-section">
           <h3>Brush Size</h3>
           <input type="range" min="1" max="5" value="1" id="brushSize" style="width:100%;accent-color:var(--accent);">
         </div>
-
-        <!-- Colors -->
         <div class="tool-section">
           <h3>Color</h3>
           <div class="color-row">
@@ -279,8 +259,6 @@ body {
           </div>
           <div class="palette" id="palette"></div>
         </div>
-
-        <!-- Options -->
         <div class="tool-section">
           <h3>Options</h3>
           <div class="toggle-row">
@@ -296,8 +274,6 @@ body {
             <label for="mirrorY">Mirror Y</label>
           </div>
         </div>
-
-        <!-- Actions -->
         <div class="tool-section">
           <h3>Canvas</h3>
           <div class="btn-row">
@@ -314,8 +290,6 @@ body {
             <button class="btn" onclick="flipV()">↕</button>
           </div>
         </div>
-
-        <!-- Import -->
         <div class="tool-section">
           <h3>Import</h3>
           <div class="btn-row">
@@ -339,13 +313,15 @@ body {
       </div>
     </div>
 
-    <!-- Right Panel: Preview + Code + Push -->
+    <!-- Right Panel -->
     <div class="panel">
       <div class="tabs">
         <div class="tab active" onclick="switchTab('preview')">Preview</div>
         <div class="tab" onclick="switchTab('frames')">Frames</div>
         <div class="tab" onclick="switchTab('community')">Apps</div>
         <div class="tab" onclick="switchTab('code')">Code</div>
+        <div class="tab" onclick="switchTab('device')">Device</div>
+        <div class="tab" onclick="switchTab('message')">Message</div>
         <div class="tab" onclick="switchTab('push')">Push</div>
       </div>
       <div class="panel-body">
@@ -360,8 +336,6 @@ body {
               <button class="btn" onclick="updatePreview()">🔄 Refresh</button>
             </div>
           </div>
-
-          <!-- Quick Widgets -->
           <div class="tool-section">
             <h3>Quick Add</h3>
             <div class="widget-card" onclick="addTextWidget()">
@@ -385,8 +359,6 @@ body {
               <p>Generate a checkerboard pattern</p>
             </div>
           </div>
-
-          <!-- Export -->
           <div class="tool-section">
             <h3>Export</h3>
             <div class="btn-row">
@@ -427,8 +399,8 @@ body {
           <div class="tool-section">
             <h3>Community Apps</h3>
             <p style="font-size:10px;color:var(--text-dim);margin-bottom:10px;">
-              Browse 1000+ community Tidbyt apps. View source code and download Starlark files.
-              <br><em>Note: These are Starlark source files — you need <a href="https://github.com/tidbyt/pixlet" style="color:var(--accent2)">Pixlet CLI</a> to render them into images for push.</em>
+              Browse 1000+ community Tidbyt apps. View source code and extract config schemas.
+              <br><em>Note: .star files are Starlark — you need <a href="https://github.com/tidbyt/pixlet" style="color:var(--accent2)">Pixlet CLI</a> to render them. The config editor below is for reference/documentation.</em>
             </p>
             <div class="input-group">
               <label>Search Apps</label>
@@ -438,7 +410,16 @@ body {
               <button class="btn btn-primary" onclick="loadCommunityApps()">🔄 Load App List</button>
               <span id="communityCount" style="font-size:10px;color:var(--text-dim);align-self:center;"></span>
             </div>
-            <div id="communityList" style="max-height:500px;overflow-y:auto;"></div>
+            <div id="communityList" style="max-height:300px;overflow-y:auto;"></div>
+          </div>
+          <!-- Schema Config Editor -->
+          <div class="tool-section" id="schemaConfigSection" style="display:none;">
+            <h3>📋 App Config (Schema)</h3>
+            <p style="font-size:9px;color:var(--text-dim);margin-bottom:8px;">
+              Parsed from <code>get_schema()</code>. These are the config fields this app expects.
+              Values are stored locally for reference. Community apps cannot be rendered in-browser.
+            </p>
+            <div id="schemaConfigForm"></div>
           </div>
         </div>
 
@@ -469,13 +450,95 @@ def main(config):
           </div>
         </div>
 
+        <!-- Device Tab -->
+        <div class="tab-content" id="tab-device">
+          <div class="tool-section">
+            <h3>📱 Device Dashboard</h3>
+            <p style="font-size:10px;color:var(--text-dim);margin-bottom:12px;">
+              View and manage your Tidbyt device. Requires Device ID and API Token (set in Push tab).
+            </p>
+            <div class="btn-row" style="margin-bottom:12px;">
+              <button class="btn btn-primary" onclick="loadDeviceInfo()">🔄 Refresh Device Info</button>
+            </div>
+            <div id="deviceDashboard">
+              <p style="color:var(--text-dim);font-size:11px;">Click refresh to load device info.</p>
+            </div>
+            <div style="margin-top:12px;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;">
+              <p style="font-size:9px;color:var(--text-dim);">
+                ⚠️ Note: The Tidbyt API does not provide an endpoint to retrieve the current display image.
+                What you see on the device cannot be read back via the API.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message Tab -->
+        <div class="tab-content" id="tab-message">
+          <div class="tool-section">
+            <h3>💬 Send Message</h3>
+            <p style="font-size:10px;color:var(--text-dim);margin-bottom:12px;">
+              Render text using the built-in pixel font and push directly to your device.
+            </p>
+            <div class="input-group">
+              <label>Message Text</label>
+              <input type="text" id="msgText" placeholder="Hello World!" value="Hello!" oninput="updateMsgPreview()">
+            </div>
+            <div class="input-group">
+              <label>Text Color</label>
+              <input type="color" id="msgColor" value="#ffffff" oninput="updateMsgPreview()">
+            </div>
+            <div class="input-group">
+              <label>Background Color</label>
+              <input type="color" id="msgBgColor" value="#000000" oninput="updateMsgPreview()">
+            </div>
+            <div class="input-group">
+              <label>Vertical Position (Y)</label>
+              <input type="range" id="msgY" min="0" max="26" value="13" style="accent-color:var(--accent);" oninput="updateMsgPreview()">
+            </div>
+            <div class="input-group">
+              <label>Mode</label>
+              <select id="msgMode" onchange="updateMsgPreview()">
+                <option value="static">Static (centered)</option>
+                <option value="scroll" selected>Scroll Left</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Scroll Speed (ms per frame)</label>
+              <input type="number" id="msgSpeed" value="75" min="20" max="500" step="5">
+            </div>
+            <div class="msg-preview-wrap">
+              <canvas id="msgPreviewCanvas" width="128" height="64"></canvas>
+            </div>
+            <div class="btn-row" style="margin-bottom:8px;">
+              <button class="btn" onclick="previewMessage()">▶ Preview Animation</button>
+              <button class="btn" onclick="stopMsgPreview()">⏹ Stop</button>
+            </div>
+            <div style="padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;margin-bottom:10px;">
+              <h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:6px;">Push Mode</h3>
+              <div class="toggle-row">
+                <input type="radio" name="msgPushMode" id="msgPushPreview" value="preview" checked style="accent-color:var(--accent);">
+                <label for="msgPushPreview"><strong>One-shot</strong> — show once, not saved</label>
+              </div>
+              <div class="toggle-row">
+                <input type="radio" name="msgPushMode" id="msgPushInstall" value="install" style="accent-color:var(--accent);">
+                <label for="msgPushInstall"><strong>Install</strong> — add to rotation</label>
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Installation ID (for install mode)</label>
+              <input type="text" id="msgInstallId" placeholder="my-message" value="studio-message">
+            </div>
+            <button class="btn btn-success" onclick="pushMessage()" style="width:100%;">🚀 Push Message to Device</button>
+            <div id="msgPushStatus" style="margin-top:8px;font-size:11px;"></div>
+          </div>
+        </div>
+
         <!-- Push Tab -->
         <div class="tab-content" id="tab-push">
           <div class="tool-section">
             <h3>Push to Tidbyt</h3>
             <p style="font-size:10px;color:var(--text-dim);margin-bottom:12px;">
-              Push your creation directly to your Tidbyt device via API.
-              Get your API key from the Tidbyt app → Device Settings → Get API Key.
+              Push your pixel art directly to your Tidbyt device via API.
             </p>
             <div class="input-group">
               <label>Device ID</label>
@@ -503,18 +566,12 @@ def main(config):
                 <input type="radio" name="pushMode" id="pushBackground" value="background" style="accent-color:var(--accent);">
                 <label for="pushBackground"><strong>Background</strong> — add to rotation silently</label>
               </div>
-              <p style="font-size:9px;color:var(--text-dim);margin-top:6px;">
-                Preview = no installation ID (shows once, then gone).<br>
-                Install = uses installation ID (stays in rotation, re-push to update).<br>
-                Background = install without immediately displaying.
-              </p>
             </div>
             <div class="btn-row" style="margin-top:12px;">
               <button class="btn btn-success" onclick="pushToDevice()">🚀 Push to Device</button>
             </div>
             <div id="pushStatus" style="margin-top:10px;font-size:11px;"></div>
           </div>
-
           <div class="push-section">
             <h3 style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:8px;">Saved Devices</h3>
             <div id="savedDevices"></div>
@@ -526,11 +583,10 @@ def main(config):
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <!-- Text Modal -->
-<div id="textModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:none;align-items:center;justify-content:center;">
+<div id="textModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;align-items:center;justify-content:center;">
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;width:340px;">
     <h3 style="margin-bottom:12px;font-size:14px;">Add Text</h3>
     <div class="input-group">
@@ -542,7 +598,6 @@ def main(config):
       <select id="textFont">
         <option value="4x6" selected>4×6 Pixel (default)</option>
       </select>
-      <p style="font-size:9px;color:var(--text-dim);margin-top:4px;">Bitmap pixel font — 4px wide, 6px tall per char, 1px spacing</p>
     </div>
     <div class="input-group">
       <label>Position X</label>
@@ -578,10 +633,16 @@ def main(config):
         <li><code>Ctrl+Y</code> — Redo</li>
         <li><code>Ctrl+S</code> — Export PNG</li>
       </ul>
-      <p><strong>Frames:</strong> Create animation frames, set delay, export as animated WebP/GIF.</p>
-      <p><strong>Push:</strong> Enter your Device ID + API Token from the Tidbyt app to push directly.</p>
-      <p><strong>Starlark:</strong> Generate Pixlet-compatible code to use with <code>pixlet render</code>.</p>
-      <p style="margin-top:12px;color:var(--text-dim);">API: POST to <code>api.tidbyt.com/v0/devices/{id}/push</code> with base64 WebP.</p>
+      <p><strong>Tabs:</strong></p>
+      <ul style="padding-left:16px;">
+        <li><strong>Preview</strong> — Live preview, widgets, export</li>
+        <li><strong>Frames</strong> — Animation frame management</li>
+        <li><strong>Apps</strong> — Browse community apps, view schemas</li>
+        <li><strong>Code</strong> — Starlark code editor</li>
+        <li><strong>Device</strong> — Device dashboard, brightness, installed apps</li>
+        <li><strong>Message</strong> — Quick text message push with pixel font</li>
+        <li><strong>Push</strong> — Push pixel art to device</li>
+      </ul>
     </div>
     <button class="btn" onclick="closeHelp()" style="margin-top:16px;">Close</button>
   </div>
@@ -589,7 +650,6 @@ def main(config):
 
 <script>
 // ===== BITMAP PIXEL FONT (4x6, covers ASCII 32-126) =====
-// Each char is 4 wide, 6 tall. Stored as array of 6 rows of 4-bit bitmasks.
 const PIXEL_FONT = {};
 (function(){
   const raw = {
@@ -620,10 +680,7 @@ const PIXEL_FONT = {};
     'y':[0,9,9,7,1,6],'z':[0,15,2,4,15,0],
     '{':[2,4,8,4,2,0],'|':[4,4,4,4,4,0],'}':[8,4,2,4,8,0],'~':[0,5,10,0,0,0],
   };
-  for (const [ch, rows] of Object.entries(raw)) {
-    PIXEL_FONT[ch] = rows;
-  }
-  // Lowercase aliases: map any missing lowercase to uppercase
+  for (const [ch, rows] of Object.entries(raw)) PIXEL_FONT[ch] = rows;
   for (let i = 65; i <= 90; i++) {
     const lower = String.fromCharCode(i + 32);
     const upper = String.fromCharCode(i);
@@ -652,80 +709,51 @@ function drawPixelText(text, startX, startY, color, frameData) {
 }
 
 // ===== MINIMAL GIF ENCODER =====
-// Pure JS GIF89a encoder for 64x32 animations
 const GIFEncoder = {
   encode(framesRGBA, width, height, delayMs) {
-    // framesRGBA: array of Uint8Array(w*h*4)
-    const delay = Math.round(delayMs / 10); // GIF uses centiseconds
+    const delay = Math.round(delayMs / 10);
     const out = [];
     const write = b => { if (Array.isArray(b)) b.forEach(v => out.push(v)); else out.push(b); };
     const writeStr = s => { for (let i=0;i<s.length;i++) out.push(s.charCodeAt(i)); };
     const writeU16 = v => { write(v & 0xff); write((v >> 8) & 0xff); };
-
-    // Header
     writeStr('GIF89a');
     writeU16(width); writeU16(height);
-    // Global color table: 256 colors, 8 bits
-    write(0xf7); // GCT flag + 8bit color res + 256 entry table
-    write(0); // bg color index
-    write(0); // pixel aspect
-    // Build global color table (full 256-color palette via median cut... or just use all unique + pad)
-    // Simple: use a fixed 6x6x6 color cube + extras
+    write(0xf7); write(0); write(0);
     const gct = [];
     for (let r = 0; r < 6; r++)
       for (let g = 0; g < 6; g++)
-        for (let b = 0; b < 6; b++) {
+        for (let b = 0; b < 6; b++)
           gct.push(Math.round(r*255/5), Math.round(g*255/5), Math.round(b*255/5));
-        }
-    // Pad to 256 entries (216 cube + 40 padding)
     while (gct.length < 768) gct.push(0);
     write(gct);
-
-    // Netscape extension for looping
     write(0x21); write(0xff); write(11);
     writeStr('NETSCAPE2.0');
-    write(3); write(1); writeU16(0); write(0); // loop forever
-
-    // Quantize helper: nearest color in 6x6x6 cube
+    write(3); write(1); writeU16(0); write(0);
     function quantize(r, g, b) {
-      const ri = Math.round(r * 5 / 255);
-      const gi = Math.round(g * 5 / 255);
-      const bi = Math.round(b * 5 / 255);
-      return ri * 36 + gi * 6 + bi;
+      return Math.round(r*5/255)*36 + Math.round(g*5/255)*6 + Math.round(b*5/255);
     }
-
     for (const rgba of framesRGBA) {
-      // Graphic control extension
       write(0x21); write(0xf9); write(4);
-      write(0x00); // no transparency
-      writeU16(delay);
-      write(0); // transparent color index (unused)
-      write(0);
-      // Image descriptor
+      write(0x00); writeU16(delay); write(0); write(0);
       write(0x2c);
       writeU16(0); writeU16(0); writeU16(width); writeU16(height);
-      write(0); // no local color table
-
-      // LZW compress the indexed pixels
+      write(0);
       const pixels = new Uint8Array(width * height);
-      for (let i = 0; i < width * height; i++) {
+      for (let i = 0; i < width * height; i++)
         pixels[i] = quantize(rgba[i*4], rgba[i*4+1], rgba[i*4+2]);
-      }
       const compressed = this.lzwEncode(8, pixels);
-      write(8); // LZW min code size
-      // Write in sub-blocks of 255
+      write(8);
       let pos = 0;
       while (pos < compressed.length) {
         const chunk = Math.min(255, compressed.length - pos);
         write(chunk);
         for (let i = 0; i < chunk; i++) out.push(compressed[pos++]);
       }
-      write(0); // block terminator
+      write(0);
     }
-    write(0x3b); // trailer
+    write(0x3b);
     return new Uint8Array(out);
   },
-
   lzwEncode(minCodeSize, pixels) {
     const clearCode = 1 << minCodeSize;
     const eoiCode = clearCode + 1;
@@ -734,22 +762,18 @@ const GIFEncoder = {
     const out = [];
     let buf = 0, bufLen = 0;
     const emit = code => {
-      buf |= code << bufLen;
-      bufLen += codeSize;
+      buf |= code << bufLen; bufLen += codeSize;
       while (bufLen >= 8) { out.push(buf & 0xff); buf >>= 8; bufLen -= 8; }
     };
-    // Build initial table
     let table = new Map();
     for (let i = 0; i < clearCode; i++) table.set(String(i), i);
-
     emit(clearCode);
     let current = String(pixels[0]);
     for (let i = 1; i < pixels.length; i++) {
       const next = String(pixels[i]);
       const combined = current + ',' + next;
-      if (table.has(combined)) {
-        current = combined;
-      } else {
+      if (table.has(combined)) { current = combined; }
+      else {
         emit(table.get(current));
         if (nextCode < 4096) {
           table.set(combined, nextCode++);
@@ -758,8 +782,7 @@ const GIFEncoder = {
           emit(clearCode);
           table = new Map();
           for (let j = 0; j < clearCode; j++) table.set(String(j), j);
-          nextCode = eoiCode + 1;
-          codeSize = minCodeSize + 1;
+          nextCode = eoiCode + 1; codeSize = minCodeSize + 1;
         }
         current = next;
       }
@@ -785,6 +808,7 @@ let isDrawing = false;
 let lastX = -1, lastY = -1;
 let shapeStart = null;
 let animInterval = null;
+let msgAnimInterval = null;
 
 const canvas = document.getElementById('pixelCanvas');
 const ctx = canvas.getContext('2d');
@@ -802,8 +826,7 @@ const PALETTE = [
 ];
 
 function initPalette() {
-  const el = document.getElementById('palette');
-  el.innerHTML = PALETTE.map(c =>
+  document.getElementById('palette').innerHTML = PALETTE.map(c =>
     `<div class="palette-color" style="background:${c}" onclick="updateColor('${c}')"></div>`
   ).join('');
 }
@@ -811,7 +834,7 @@ function initPalette() {
 // ===== FRAME MANAGEMENT =====
 function createEmptyFrame() {
   const data = new Array(W * H);
-  for (let i = 0; i < data.length; i++) data[i] = null; // null = transparent/off
+  for (let i = 0; i < data.length; i++) data[i] = null;
   return data;
 }
 
@@ -824,16 +847,10 @@ function setPixel(x, y, color) {
   const f = frames[currentFrame];
   if (x >= 0 && x < W && y >= 0 && y < H) {
     f[y * W + x] = color;
-    // Mirror
-    if (document.getElementById('mirrorX').checked) {
-      f[y * W + (W - 1 - x)] = color;
-    }
-    if (document.getElementById('mirrorY').checked) {
-      f[(H - 1 - y) * W + x] = color;
-    }
-    if (document.getElementById('mirrorX').checked && document.getElementById('mirrorY').checked) {
+    if (document.getElementById('mirrorX').checked) f[y * W + (W - 1 - x)] = color;
+    if (document.getElementById('mirrorY').checked) f[(H - 1 - y) * W + x] = color;
+    if (document.getElementById('mirrorX').checked && document.getElementById('mirrorY').checked)
       f[(H - 1 - y) * W + (W - 1 - x)] = color;
-    }
   }
 }
 
@@ -842,36 +859,25 @@ function render() {
   const showGrid = document.getElementById('gridToggle').checked;
   const gap = showGrid ? 1 : 0;
   const cellSize = PIXEL_SIZE;
-  
   canvas.width = W * cellSize + (showGrid ? W - 1 : 0);
   canvas.height = H * cellSize + (showGrid ? H - 1 : 0);
-  
   ctx.fillStyle = '#111';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Onion skin
   if (document.getElementById('onionSkin')?.checked && currentFrame > 0) {
     for (let y = 0; y < H; y++) {
       for (let x = 0; x < W; x++) {
         const c = getPixel(x, y, currentFrame - 1);
-        if (c) {
-          ctx.globalAlpha = 0.2;
-          ctx.fillStyle = c;
-          ctx.fillRect(x * (cellSize + gap), y * (cellSize + gap), cellSize, cellSize);
-        }
+        if (c) { ctx.globalAlpha = 0.2; ctx.fillStyle = c; ctx.fillRect(x*(cellSize+gap), y*(cellSize+gap), cellSize, cellSize); }
       }
     }
     ctx.globalAlpha = 1;
   }
-
   for (let y = 0; y < H; y++) {
     for (let x = 0; x < W; x++) {
-      const c = getPixel(x, y);
-      ctx.fillStyle = c || '#0a0a0f';
-      ctx.fillRect(x * (cellSize + gap), y * (cellSize + gap), cellSize, cellSize);
+      ctx.fillStyle = getPixel(x, y) || '#0a0a0f';
+      ctx.fillRect(x*(cellSize+gap), y*(cellSize+gap), cellSize, cellSize);
     }
   }
-
   updatePreview();
   updateFrameBar();
 }
@@ -879,15 +885,11 @@ function render() {
 function updatePreview() {
   previewCtx.fillStyle = '#000';
   previewCtx.fillRect(0, 0, 128, 64);
-  for (let y = 0; y < H; y++) {
+  for (let y = 0; y < H; y++)
     for (let x = 0; x < W; x++) {
       const c = getPixel(x, y);
-      if (c) {
-        previewCtx.fillStyle = c;
-        previewCtx.fillRect(x * 2, y * 2, 2, 2);
-      }
+      if (c) { previewCtx.fillStyle = c; previewCtx.fillRect(x*2, y*2, 2, 2); }
     }
-  }
 }
 
 // ===== TOOLS =====
@@ -895,672 +897,760 @@ function setTool(tool) {
   currentTool = tool;
   document.querySelectorAll('.tool-btn').forEach(b => b.classList.toggle('active', b.dataset.tool === tool));
 }
-
 function updateColor(c) {
   fgColor = c;
   document.getElementById('fgSwatch').style.background = c;
   document.getElementById('fgColor').value = c;
   document.getElementById('fgHex').value = c;
 }
-
-function updateColorHex(val) {
-  if (/^#[0-9a-fA-F]{6}$/.test(val)) updateColor(val);
-}
-
-function updateBgColor(c) {
-  bgColor = c;
-  document.getElementById('bgSwatch').style.background = c;
-}
+function updateColorHex(val) { if (/^#[0-9a-fA-F]{6}$/.test(val)) updateColor(val); }
+function updateBgColor(c) { bgColor = c; document.getElementById('bgSwatch').style.background = c; }
 
 function saveState() {
   undoStack.push(frames.map(f => [...f]));
   if (undoStack.length > 50) undoStack.shift();
   redoStack = [];
 }
-
-function undo() {
-  if (!undoStack.length) return;
-  redoStack.push(frames.map(f => [...f]));
-  frames = undoStack.pop();
-  render();
-}
-
-function redo() {
-  if (!redoStack.length) return;
-  undoStack.push(frames.map(f => [...f]));
-  frames = redoStack.pop();
-  render();
-}
+function undo() { if (!undoStack.length) return; redoStack.push(frames.map(f=>[...f])); frames = undoStack.pop(); render(); }
+function redo() { if (!redoStack.length) return; undoStack.push(frames.map(f=>[...f])); frames = redoStack.pop(); render(); }
 
 function getCanvasCoords(e) {
   const rect = canvas.getBoundingClientRect();
   const showGrid = document.getElementById('gridToggle').checked;
   const gap = showGrid ? 1 : 0;
-  const cellSize = PIXEL_SIZE;
-  const totalCell = cellSize + gap;
+  const totalCell = PIXEL_SIZE + gap;
   const x = Math.floor((e.clientX - rect.left) / totalCell);
   const y = Math.floor((e.clientY - rect.top) / totalCell);
-  return [Math.max(0, Math.min(W - 1, x)), Math.max(0, Math.min(H - 1, y))];
+  return [Math.max(0, Math.min(W-1, x)), Math.max(0, Math.min(H-1, y))];
 }
 
-// Drawing handlers
 canvas.addEventListener('mousedown', e => {
   const [x, y] = getCanvasCoords(e);
-  isDrawing = true;
-  saveState();
-  
-  if (currentTool === 'pencil') {
-    setPixel(x, y, fgColor);
-    lastX = x; lastY = y;
-  } else if (currentTool === 'eraser') {
-    setPixel(x, y, null);
-    lastX = x; lastY = y;
-  } else if (currentTool === 'fill') {
-    floodFill(x, y, fgColor);
-  } else if (currentTool === 'picker') {
-    const c = getPixel(x, y);
-    if (c) updateColor(c);
-  } else if (['line','rect','fillrect','circle'].includes(currentTool)) {
-    shapeStart = [x, y];
-    lastX = x; lastY = y;
-  }
+  isDrawing = true; saveState();
+  if (currentTool === 'pencil') { setPixel(x,y,fgColor); lastX=x; lastY=y; }
+  else if (currentTool === 'eraser') { setPixel(x,y,null); lastX=x; lastY=y; }
+  else if (currentTool === 'fill') floodFill(x,y,fgColor);
+  else if (currentTool === 'picker') { const c=getPixel(x,y); if(c) updateColor(c); }
+  else if (['line','rect','fillrect','circle'].includes(currentTool)) { shapeStart=[x,y]; lastX=x; lastY=y; }
   render();
 });
-
 canvas.addEventListener('mousemove', e => {
   const [x, y] = getCanvasCoords(e);
   document.getElementById('coordInfo').textContent = `X: ${x}  Y: ${y}`;
-  const c = getPixel(x, y);
-  document.getElementById('colorInfo').textContent = `Color: ${c || 'empty'}`;
-  
+  document.getElementById('colorInfo').textContent = `Color: ${getPixel(x,y)||'empty'}`;
   if (!isDrawing) return;
-  
-  if (currentTool === 'pencil') {
-    bresenhamLine(lastX, lastY, x, y, fgColor);
-    lastX = x; lastY = y;
-  } else if (currentTool === 'eraser') {
-    bresenhamLine(lastX, lastY, x, y, null);
-    lastX = x; lastY = y;
-  }
+  if (currentTool === 'pencil') { bresenhamLine(lastX,lastY,x,y,fgColor); lastX=x; lastY=y; }
+  else if (currentTool === 'eraser') { bresenhamLine(lastX,lastY,x,y,null); lastX=x; lastY=y; }
   render();
 });
-
 canvas.addEventListener('mouseup', e => {
   if (!isDrawing) return;
   const [x, y] = getCanvasCoords(e);
-  
   if (shapeStart) {
-    const [sx, sy] = shapeStart;
-    if (currentTool === 'line') {
-      bresenhamLine(sx, sy, x, y, fgColor);
-    } else if (currentTool === 'rect') {
-      drawRect(sx, sy, x, y, fgColor, false);
-    } else if (currentTool === 'fillrect') {
-      drawRect(sx, sy, x, y, fgColor, true);
-    } else if (currentTool === 'circle') {
-      drawCircle(sx, sy, Math.max(Math.abs(x-sx), Math.abs(y-sy)), fgColor);
-    }
+    const [sx,sy] = shapeStart;
+    if (currentTool==='line') bresenhamLine(sx,sy,x,y,fgColor);
+    else if (currentTool==='rect') drawRect(sx,sy,x,y,fgColor,false);
+    else if (currentTool==='fillrect') drawRect(sx,sy,x,y,fgColor,true);
+    else if (currentTool==='circle') drawCircle(sx,sy,Math.max(Math.abs(x-sx),Math.abs(y-sy)),fgColor);
     shapeStart = null;
   }
-  isDrawing = false;
-  render();
+  isDrawing = false; render();
 });
-
 canvas.addEventListener('mouseleave', () => { isDrawing = false; shapeStart = null; });
 
 // ===== DRAWING ALGORITHMS =====
-function bresenhamLine(x0, y0, x1, y1, color) {
-  const dx = Math.abs(x1 - x0), dy = Math.abs(y1 - y0);
-  const sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
-  let err = dx - dy;
-  while (true) {
-    setPixel(x0, y0, color);
-    if (x0 === x1 && y0 === y1) break;
-    const e2 = 2 * err;
-    if (e2 > -dy) { err -= dy; x0 += sx; }
-    if (e2 < dx) { err += dx; y0 += sy; }
+function bresenhamLine(x0,y0,x1,y1,color) {
+  const dx=Math.abs(x1-x0), dy=Math.abs(y1-y0);
+  const sx=x0<x1?1:-1, sy=y0<y1?1:-1;
+  let err=dx-dy;
+  while(true) {
+    setPixel(x0,y0,color);
+    if(x0===x1&&y0===y1) break;
+    const e2=2*err;
+    if(e2>-dy){err-=dy;x0+=sx;}
+    if(e2<dx){err+=dx;y0+=sy;}
   }
 }
-
-function drawRect(x0, y0, x1, y1, color, filled) {
-  const minX = Math.min(x0,x1), maxX = Math.max(x0,x1);
-  const minY = Math.min(y0,y1), maxY = Math.max(y0,y1);
-  if (filled) {
-    for (let y = minY; y <= maxY; y++)
-      for (let x = minX; x <= maxX; x++) setPixel(x, y, color);
-  } else {
-    for (let x = minX; x <= maxX; x++) { setPixel(x, minY, color); setPixel(x, maxY, color); }
-    for (let y = minY; y <= maxY; y++) { setPixel(minX, y, color); setPixel(maxX, y, color); }
-  }
+function drawRect(x0,y0,x1,y1,color,filled) {
+  const minX=Math.min(x0,x1),maxX=Math.max(x0,x1),minY=Math.min(y0,y1),maxY=Math.max(y0,y1);
+  if(filled){for(let y=minY;y<=maxY;y++)for(let x=minX;x<=maxX;x++)setPixel(x,y,color);}
+  else{for(let x=minX;x<=maxX;x++){setPixel(x,minY,color);setPixel(x,maxY,color);}for(let y=minY;y<=maxY;y++){setPixel(minX,y,color);setPixel(maxX,y,color);}}
 }
-
-function drawCircle(cx, cy, r, color) {
-  let x = r, y = 0, err = 1 - r;
-  while (x >= y) {
-    setPixel(cx+x,cy+y,color); setPixel(cx-x,cy+y,color);
-    setPixel(cx+x,cy-y,color); setPixel(cx-x,cy-y,color);
-    setPixel(cx+y,cy+x,color); setPixel(cx-y,cy+x,color);
-    setPixel(cx+y,cy-x,color); setPixel(cx-y,cy-x,color);
+function drawCircle(cx,cy,r,color) {
+  let x=r,y=0,err=1-r;
+  while(x>=y){
+    setPixel(cx+x,cy+y,color);setPixel(cx-x,cy+y,color);
+    setPixel(cx+x,cy-y,color);setPixel(cx-x,cy-y,color);
+    setPixel(cx+y,cy+x,color);setPixel(cx-y,cy+x,color);
+    setPixel(cx+y,cy-x,color);setPixel(cx-y,cy-x,color);
     y++;
-    if (err < 0) { err += 2*y+1; } else { x--; err += 2*(y-x)+1; }
+    if(err<0)err+=2*y+1; else{x--;err+=2*(y-x)+1;}
   }
 }
-
-function floodFill(startX, startY, newColor) {
-  const f = frames[currentFrame];
-  const target = f[startY * W + startX];
-  if (target === newColor) return;
-  const stack = [[startX, startY]];
-  const visited = new Set();
-  while (stack.length) {
-    const [x, y] = stack.pop();
-    const key = y * W + x;
-    if (x < 0 || x >= W || y < 0 || y >= H) continue;
-    if (visited.has(key)) continue;
-    if (f[key] !== target) continue;
-    visited.add(key);
-    f[key] = newColor;
+function floodFill(startX,startY,newColor) {
+  const f=frames[currentFrame]; const target=f[startY*W+startX];
+  if(target===newColor) return;
+  const stack=[[startX,startY]]; const visited=new Set();
+  while(stack.length){
+    const[x,y]=stack.pop(); const key=y*W+x;
+    if(x<0||x>=W||y<0||y>=H||visited.has(key)||f[key]!==target) continue;
+    visited.add(key); f[key]=newColor;
     stack.push([x+1,y],[x-1,y],[x,y+1],[x,y-1]);
   }
 }
 
 // ===== FRAME MANAGEMENT =====
 function updateFrameBar() {
-  const bar = document.getElementById('framesBar');
-  bar.innerHTML = '';
+  const bar = document.getElementById('framesBar'); bar.innerHTML = '';
   frames.forEach((f, i) => {
     const thumb = document.createElement('div');
-    thumb.className = 'frame-thumb' + (i === currentFrame ? ' active' : '');
-    const tc = document.createElement('canvas');
-    tc.width = 64; tc.height = 32;
+    thumb.className = 'frame-thumb' + (i===currentFrame?' active':'');
+    const tc = document.createElement('canvas'); tc.width=64; tc.height=32;
     const tctx = tc.getContext('2d');
-    for (let y = 0; y < H; y++) {
-      for (let x = 0; x < W; x++) {
-        const c = f[y * W + x];
-        if (c) { tctx.fillStyle = c; tctx.fillRect(x, y, 1, 1); }
-      }
-    }
+    for(let y=0;y<H;y++) for(let x=0;x<W;x++){const c=f[y*W+x];if(c){tctx.fillStyle=c;tctx.fillRect(x,y,1,1);}}
     thumb.appendChild(tc);
-    thumb.onclick = () => { currentFrame = i; render(); updateFrameInfo(); };
+    thumb.onclick = () => { currentFrame=i; render(); updateFrameInfo(); };
     bar.appendChild(thumb);
   });
   updateFrameInfo();
 }
-
-function updateFrameInfo() {
-  document.getElementById('frameInfo').textContent = `Frame: ${currentFrame+1}/${frames.length}`;
-}
-
-function addFrame() { saveState(); frames.push(createEmptyFrame()); currentFrame = frames.length-1; render(); }
-function dupFrame() { saveState(); frames.push([...frames[currentFrame]]); currentFrame = frames.length-1; render(); }
-function delFrame() {
-  if (frames.length <= 1) return;
-  saveState(); frames.splice(currentFrame, 1);
-  if (currentFrame >= frames.length) currentFrame = frames.length - 1;
-  render();
-}
+function updateFrameInfo() { document.getElementById('frameInfo').textContent = `Frame: ${currentFrame+1}/${frames.length}`; }
+function addFrame() { saveState(); frames.push(createEmptyFrame()); currentFrame=frames.length-1; render(); }
+function dupFrame() { saveState(); frames.push([...frames[currentFrame]]); currentFrame=frames.length-1; render(); }
+function delFrame() { if(frames.length<=1)return; saveState(); frames.splice(currentFrame,1); if(currentFrame>=frames.length)currentFrame=frames.length-1; render(); }
 
 // ===== CANVAS OPERATIONS =====
-function clearCanvas() { saveState(); frames[currentFrame] = createEmptyFrame(); render(); }
-
-function shiftCanvas(dx, dy) {
-  saveState();
-  const f = frames[currentFrame];
-  const nf = createEmptyFrame();
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W; x++) {
-      const nx = (x + dx + W) % W, ny = (y + dy + H) % H;
-      nf[ny * W + nx] = f[y * W + x];
-    }
-  }
-  frames[currentFrame] = nf;
-  render();
+function clearCanvas() { saveState(); frames[currentFrame]=createEmptyFrame(); render(); }
+function shiftCanvas(dx,dy) {
+  saveState(); const f=frames[currentFrame]; const nf=createEmptyFrame();
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){const nx=(x+dx+W)%W,ny=(y+dy+H)%H;nf[ny*W+nx]=f[y*W+x];}
+  frames[currentFrame]=nf; render();
 }
-
 function flipH() {
-  saveState();
-  const f = frames[currentFrame];
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W / 2; x++) {
-      const tmp = f[y*W+x];
-      f[y*W+x] = f[y*W+(W-1-x)];
-      f[y*W+(W-1-x)] = tmp;
-    }
-  }
+  saveState(); const f=frames[currentFrame];
+  for(let y=0;y<H;y++) for(let x=0;x<W/2;x++){const t=f[y*W+x];f[y*W+x]=f[y*W+(W-1-x)];f[y*W+(W-1-x)]=t;}
   render();
 }
-
 function flipV() {
-  saveState();
-  const f = frames[currentFrame];
-  for (let x = 0; x < W; x++) {
-    for (let y = 0; y < H / 2; y++) {
-      const tmp = f[y*W+x];
-      f[y*W+x] = f[(H-1-y)*W+x];
-      f[(H-1-y)*W+x] = tmp;
-    }
-  }
+  saveState(); const f=frames[currentFrame];
+  for(let x=0;x<W;x++) for(let y=0;y<H/2;y++){const t=f[y*W+x];f[y*W+x]=f[(H-1-y)*W+x];f[(H-1-y)*W+x]=t;}
   render();
 }
 
 // ===== WIDGETS =====
-function addTextWidget() {
-  document.getElementById('textModal').style.display = 'flex';
-}
-
-function closeTextModal() {
-  document.getElementById('textModal').style.display = 'none';
-}
-
+function addTextWidget() { document.getElementById('textModal').style.display = 'flex'; }
+function closeTextModal() { document.getElementById('textModal').style.display = 'none'; }
 function stampText() {
-  const text = document.getElementById('textInput').value;
-  const tx = parseInt(document.getElementById('textX').value);
-  const ty = parseInt(document.getElementById('textY').value);
-  
-  saveState();
-  drawPixelText(text, tx, ty, fgColor);
-  closeTextModal();
-  render();
+  const text=document.getElementById('textInput').value;
+  const tx=parseInt(document.getElementById('textX').value);
+  const ty=parseInt(document.getElementById('textY').value);
+  saveState(); drawPixelText(text,tx,ty,fgColor); closeTextModal(); render();
 }
-
-function addShapeWidget() {
-  toast('Select Rectangle or Circle tool and draw on canvas', 'info');
-  setTool('fillrect');
-}
-
+function addShapeWidget() { toast('Select Rectangle or Circle tool and draw on canvas','info'); setTool('fillrect'); }
 function addGradient() {
-  saveState();
-  const c1 = hexToRgb(fgColor);
-  const c2 = hexToRgb(bgColor);
-  for (let x = 0; x < W; x++) {
-    const t = x / (W - 1);
-    const r = Math.round(c1.r + (c2.r - c1.r) * t);
-    const g = Math.round(c1.g + (c2.g - c1.g) * t);
-    const b = Math.round(c1.b + (c2.b - c1.b) * t);
-    const color = rgbToHex(r, g, b);
-    for (let y = 0; y < H; y++) setPixel(x, y, color);
-  }
-  render();
-  toast('Gradient applied (FG → BG color)', 'success');
+  saveState(); const c1=hexToRgb(fgColor),c2=hexToRgb(bgColor);
+  for(let x=0;x<W;x++){const t=x/(W-1);const r=Math.round(c1.r+(c2.r-c1.r)*t);const g=Math.round(c1.g+(c2.g-c1.g)*t);const b=Math.round(c1.b+(c2.b-c1.b)*t);const color=rgbToHex(r,g,b);for(let y=0;y<H;y++)setPixel(x,y,color);}
+  render(); toast('Gradient applied','success');
 }
-
 function addNoise() {
   saveState();
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W; x++) {
-      if (Math.random() > 0.5) {
-        const r = Math.floor(Math.random()*256);
-        const g = Math.floor(Math.random()*256);
-        const b = Math.floor(Math.random()*256);
-        setPixel(x, y, rgbToHex(r, g, b));
-      }
-    }
-  }
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++) if(Math.random()>0.5) setPixel(x,y,rgbToHex(Math.floor(Math.random()*256),Math.floor(Math.random()*256),Math.floor(Math.random()*256)));
   render();
 }
-
 function addCheckerboard() {
   saveState();
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W; x++) {
-      setPixel(x, y, (x + y) % 2 === 0 ? fgColor : bgColor);
-    }
-  }
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++) setPixel(x,y,(x+y)%2===0?fgColor:bgColor);
   render();
 }
 
 // ===== IMPORT =====
 function importImage() { document.getElementById('imageInput').click(); }
-
 function handleImageImport(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const img = new Image();
-  img.onload = () => {
+  const file=e.target.files[0]; if(!file) return;
+  const img=new Image();
+  img.onload=()=>{
     saveState();
-    const tc = document.createElement('canvas');
-    tc.width = W; tc.height = H;
-    const tctx = tc.getContext('2d');
-    tctx.imageSmoothingEnabled = false;
-    // Scale to fit
-    const scale = Math.min(W / img.width, H / img.height);
-    const w = Math.round(img.width * scale);
-    const h = Math.round(img.height * scale);
-    const ox = Math.floor((W - w) / 2);
-    const oy = Math.floor((H - h) / 2);
-    tctx.drawImage(img, ox, oy, w, h);
-    
-    const imgData = tctx.getImageData(0, 0, W, H);
-    for (let y = 0; y < H; y++) {
-      for (let x = 0; x < W; x++) {
-        const i = (y * W + x) * 4;
-        const a = imgData.data[i + 3];
-        if (a > 32) {
-          const r = imgData.data[i], g = imgData.data[i+1], b = imgData.data[i+2];
-          frames[currentFrame][y * W + x] = rgbToHex(r, g, b);
-        }
-      }
+    const tc=document.createElement('canvas');tc.width=W;tc.height=H;
+    const tctx=tc.getContext('2d');tctx.imageSmoothingEnabled=false;
+    const scale=Math.min(W/img.width,H/img.height);
+    const w=Math.round(img.width*scale),h=Math.round(img.height*scale);
+    const ox=Math.floor((W-w)/2),oy=Math.floor((H-h)/2);
+    tctx.drawImage(img,ox,oy,w,h);
+    const imgData=tctx.getImageData(0,0,W,H);
+    for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+      const i=(y*W+x)*4;
+      if(imgData.data[i+3]>32) frames[currentFrame][y*W+x]=rgbToHex(imgData.data[i],imgData.data[i+1],imgData.data[i+2]);
     }
-    render();
-    toast('Image imported!', 'success');
+    render(); toast('Image imported!','success');
   };
-  img.src = URL.createObjectURL(file);
-  e.target.value = '';
+  img.src=URL.createObjectURL(file); e.target.value='';
 }
-
 function importText() { addTextWidget(); }
 
 // ===== ANIMATION =====
 function togglePreviewAnim() {
-  if (animInterval) {
-    clearInterval(animInterval);
-    animInterval = null;
-    return;
-  }
-  if (frames.length < 2) { toast('Add more frames first', 'info'); return; }
-  let fi = 0;
-  const delay = parseInt(document.getElementById('frameDelay').value) || 100;
-  animInterval = setInterval(() => {
-    previewCtx.fillStyle = '#000';
-    previewCtx.fillRect(0, 0, 128, 64);
-    for (let y = 0; y < H; y++) {
-      for (let x = 0; x < W; x++) {
-        const c = frames[fi][y * W + x];
-        if (c) { previewCtx.fillStyle = c; previewCtx.fillRect(x*2, y*2, 2, 2); }
-      }
-    }
-    fi = (fi + 1) % frames.length;
-  }, delay);
+  if(animInterval){clearInterval(animInterval);animInterval=null;return;}
+  if(frames.length<2){toast('Add more frames first','info');return;}
+  let fi=0; const delay=parseInt(document.getElementById('frameDelay').value)||100;
+  animInterval=setInterval(()=>{
+    previewCtx.fillStyle='#000';previewCtx.fillRect(0,0,128,64);
+    for(let y=0;y<H;y++) for(let x=0;x<W;x++){const c=frames[fi][y*W+x];if(c){previewCtx.fillStyle=c;previewCtx.fillRect(x*2,y*2,2,2);}}
+    fi=(fi+1)%frames.length;
+  },delay);
 }
 
 // ===== EXPORT =====
 function getFrameImageData(frameIdx) {
-  const tc = document.createElement('canvas');
-  tc.width = W; tc.height = H;
-  const tctx = tc.getContext('2d');
-  tctx.fillStyle = '#000';
-  tctx.fillRect(0, 0, W, H);
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W; x++) {
-      const c = frames[frameIdx][y * W + x];
-      if (c) { tctx.fillStyle = c; tctx.fillRect(x, y, 1, 1); }
-    }
-  }
+  const tc=document.createElement('canvas');tc.width=W;tc.height=H;
+  const tctx=tc.getContext('2d');tctx.fillStyle='#000';tctx.fillRect(0,0,W,H);
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){const c=frames[frameIdx][y*W+x];if(c){tctx.fillStyle=c;tctx.fillRect(x,y,1,1);}}
   return tc;
 }
-
 function exportPNG() {
-  const tc = getFrameImageData(currentFrame);
-  const link = document.createElement('a');
-  link.download = 'tidbyt-frame.png';
-  link.href = tc.toDataURL('image/png');
-  link.click();
-  toast('PNG exported!', 'success');
+  const tc=getFrameImageData(currentFrame);const link=document.createElement('a');
+  link.download='tidbyt-frame.png';link.href=tc.toDataURL('image/png');link.click();toast('PNG exported!','success');
 }
-
 function exportWebP() {
-  if (frames.length === 1) {
-    const tc = getFrameImageData(0);
-    const link = document.createElement('a');
-    link.download = 'tidbyt.webp';
-    link.href = tc.toDataURL('image/webp');
-    link.click();
-    toast('WebP exported!', 'success');
-  } else {
-    // Multi-frame: export as animated GIF (browsers can't create animated WebP)
-    exportGIF();
-  }
+  if(frames.length===1){const tc=getFrameImageData(0);const link=document.createElement('a');link.download='tidbyt.webp';link.href=tc.toDataURL('image/webp');link.click();toast('WebP exported!','success');}
+  else exportGIF();
 }
-
 function getFramesRGBA() {
-  const allRGBA = [];
-  for (let fi = 0; fi < frames.length; fi++) {
-    const tc = getFrameImageData(fi);
-    const tctx = tc.getContext('2d');
-    const imgData = tctx.getImageData(0, 0, W, H);
-    allRGBA.push(imgData.data);
-  }
-  return allRGBA;
+  const all=[];
+  for(let fi=0;fi<frames.length;fi++){const tc=getFrameImageData(fi);const tctx=tc.getContext('2d');all.push(tctx.getImageData(0,0,W,H).data);}
+  return all;
 }
-
 function exportGIF() {
-  const delay = parseInt(document.getElementById('frameDelay').value) || 100;
-  const allRGBA = getFramesRGBA();
-  const gifBytes = GIFEncoder.encode(allRGBA, W, H, delay);
-  const blob = new Blob([gifBytes], { type: 'image/gif' });
-  const link = document.createElement('a');
-  link.download = 'tidbyt-animation.gif';
-  link.href = URL.createObjectURL(blob);
-  link.click();
-  URL.revokeObjectURL(link.href);
-  toast(`Animated GIF exported (${frames.length} frames)!`, 'success');
+  const delay=parseInt(document.getElementById('frameDelay').value)||100;
+  const gifBytes=GIFEncoder.encode(getFramesRGBA(),W,H,delay);
+  const blob=new Blob([gifBytes],{type:'image/gif'});const link=document.createElement('a');
+  link.download='tidbyt-animation.gif';link.href=URL.createObjectURL(blob);link.click();
+  URL.revokeObjectURL(link.href);toast(`Animated GIF exported (${frames.length} frames)!`,'success');
 }
-
-function exportStarlark() {
-  generateStarlark();
-  switchTab('code');
-  toast('Starlark code generated!', 'success');
-}
+function exportStarlark() { generateStarlark(); switchTab('code'); toast('Starlark code generated!','success'); }
 
 // ===== STARLARK GENERATION =====
 function generateStarlark() {
-  const tc = getFrameImageData(currentFrame);
-  const b64 = tc.toDataURL('image/png').split(',')[1];
-  
-  let code = `load("render.star", "render")
-load("encoding/base64.star", "base64")
-
-# Auto-generated by Tidbyt Studio
-IMG_DATA = base64.decode("""
-${b64}
-""")
-
-def main(config):
-    return render.Root(
-        child = render.Image(
-            src = IMG_DATA,
-            width = 64,
-            height = 32,
-        ),
-    )
-`;
-  
-  if (frames.length > 1) {
-    const allB64 = frames.map((f, i) => {
-      const tc = getFrameImageData(i);
-      return tc.toDataURL('image/png').split(',')[1];
-    });
-    
-    code = `load("render.star", "render")
-load("encoding/base64.star", "base64")
-
-# Auto-generated by Tidbyt Studio
-# Animation with ${frames.length} frames
-FRAMES = [
-${allB64.map((b, i) => `    base64.decode("""${b}"""),  # Frame ${i+1}`).join('\n')}
-]
-
-def main(config):
-    return render.Root(
-        delay = ${document.getElementById('frameDelay').value},
-        child = render.Animation(
-            children = [
-                render.Image(src = f, width = 64, height = 32)
-                for f in FRAMES
-            ],
-        ),
-    )
-`;
+  const tc=getFrameImageData(currentFrame);const b64=tc.toDataURL('image/png').split(',')[1];
+  let code;
+  if(frames.length>1){
+    const allB64=frames.map((_,i)=>getFrameImageData(i).toDataURL('image/png').split(',')[1]);
+    code=`load("render.star", "render")\nload("encoding/base64.star", "base64")\n\nFRAMES = [\n${allB64.map((b,i)=>`    base64.decode("""${b}"""),  # Frame ${i+1}`).join('\n')}\n]\n\ndef main(config):\n    return render.Root(\n        delay = ${document.getElementById('frameDelay').value},\n        child = render.Animation(\n            children = [\n                render.Image(src = f, width = 64, height = 32)\n                for f in FRAMES\n            ],\n        ),\n    )\n`;
+  } else {
+    code=`load("render.star", "render")\nload("encoding/base64.star", "base64")\n\nIMG_DATA = base64.decode("""\n${b64}\n""")\n\ndef main(config):\n    return render.Root(\n        child = render.Image(\n            src = IMG_DATA,\n            width = 64,\n            height = 32,\n        ),\n    )\n`;
   }
-  
   document.getElementById('codeEditor').value = code;
 }
-
-function copyCode() {
-  const code = document.getElementById('codeEditor').value;
-  navigator.clipboard.writeText(code);
-  toast('Code copied to clipboard!', 'success');
-}
+function copyCode() { navigator.clipboard.writeText(document.getElementById('codeEditor').value); toast('Copied!','success'); }
 
 // ===== PUSH TO DEVICE =====
 function savePushConfig() {
-  const cfg = {
+  localStorage.setItem('tidbyt-push-config', JSON.stringify({
     deviceId: document.getElementById('deviceId').value,
     apiToken: document.getElementById('apiToken').value,
     installId: document.getElementById('installId').value,
-  };
-  localStorage.setItem('tidbyt-push-config', JSON.stringify(cfg));
+  }));
 }
-
 function loadPushConfig() {
   try {
     const cfg = JSON.parse(localStorage.getItem('tidbyt-push-config') || '{}');
-    if (cfg.deviceId) document.getElementById('deviceId').value = cfg.deviceId;
-    if (cfg.apiToken) document.getElementById('apiToken').value = cfg.apiToken;
-    if (cfg.installId) document.getElementById('installId').value = cfg.installId;
+    // Set defaults if nothing saved
+    if (!cfg.deviceId) cfg.deviceId = 'offensively-cleansing-convenient-tamarin-950';
+    if (!cfg.apiToken) cfg.apiToken = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjY1YzFhMmUzNzJjZjljMTQ1MTQyNzk5ODZhMzYyNmQ1Y2QzNTI0N2IiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJodHRwczovL2FwaS50aWRieXQuY29tIiwiZXhwIjozMjY3NDY5OTIxLCJpYXQiOjE2OTA2Njk5MjEsImlzcyI6Imh0dHBzOi8vYXBpLnRpZGJ5dC5jb20iLCJzdWIiOiJMd3FzUFVHaGZQUmlabmNobGRhalRtOUNFUGUyIiwic2NvcGUiOiJkZXZpY2UiLCJkZXZpY2UiOiJvZmZlbnNpdmVseS1jbGVhbnNpbmctY29udmVuaWVudC10YW1hcmluLTk1MCJ9.we_NvvtUwqZ7FIo7xs6Oms0AQTTLnkzGM8qpN_dZthztafBo7SzA-HGOdhGOp1JHoYRavGLwnOFlT1YC0zd-dg';
+    document.getElementById('deviceId').value = cfg.deviceId || '';
+    document.getElementById('apiToken').value = cfg.apiToken || '';
+    document.getElementById('installId').value = cfg.installId || '';
+    // Save defaults to localStorage
+    savePushConfig();
   } catch(e) {}
 }
 
+function getDeviceId() { return document.getElementById('deviceId').value.trim(); }
+function getApiToken() { return document.getElementById('apiToken').value.trim(); }
+
 async function pushToDevice() {
-  const deviceId = document.getElementById('deviceId').value.trim();
-  const apiToken = document.getElementById('apiToken').value.trim();
-  const installId = document.getElementById('installId').value.trim();
-  const pushMode = document.querySelector('input[name="pushMode"]:checked').value;
-  const status = document.getElementById('pushStatus');
-  
-  if (!deviceId || !apiToken) {
-    status.innerHTML = '<span style="color:var(--danger)">❌ Device ID and API Token required</span>';
-    return;
-  }
-  
-  if (pushMode !== 'preview' && !installId) {
-    status.innerHTML = '<span style="color:var(--danger)">❌ Installation ID required for Install/Background mode</span>';
-    return;
-  }
-  
-  status.innerHTML = '<span style="color:var(--accent)">⏳ Generating image...</span>';
-  
+  const deviceId=getDeviceId(), apiToken=getApiToken();
+  const installId=document.getElementById('installId').value.trim();
+  const pushMode=document.querySelector('input[name="pushMode"]:checked').value;
+  const status=document.getElementById('pushStatus');
+  if(!deviceId||!apiToken){status.innerHTML='<span style="color:var(--danger)">❌ Device ID and API Token required</span>';return;}
+  if(pushMode!=='preview'&&!installId){status.innerHTML='<span style="color:var(--danger)">❌ Installation ID required for Install/Background mode</span>';return;}
+  status.innerHTML='<span style="color:var(--accent)">⏳ Generating image...</span>';
   let b64;
-  if (frames.length === 1) {
-    // Single frame: send as WebP
-    const tc = getFrameImageData(0);
-    const blob = await new Promise(r => tc.toBlob(r, 'image/webp'));
-    const buf = await blob.arrayBuffer();
-    b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
-  } else {
-    // Multi-frame: encode as animated GIF
-    const delay = parseInt(document.getElementById('frameDelay').value) || 100;
-    const allRGBA = getFramesRGBA();
-    const gifBytes = GIFEncoder.encode(allRGBA, W, H, delay);
-    b64 = btoa(String.fromCharCode(...gifBytes));
-  }
-  
-  status.innerHTML = '<span style="color:var(--accent)">⏳ Pushing to device...</span>';
-  
-  try {
-    const payload = {
-      deviceID: deviceId,
-      image: b64,
-    };
-    // Preview mode: no installationID (shows once then gone)
-    // Install mode: installationID set (stays in rotation)
-    // Background mode: installationID + background flag (add silently)
-    if (pushMode !== 'preview') {
-      payload.installationID = installId;
-      payload.background = (pushMode === 'background');
-    }
-    
-    // Use CORS proxy or direct (Tidbyt API supports CORS)
-    const resp = await fetch(`https://api.tidbyt.com/v0/devices/${deviceId}/push`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-    
-    if (resp.ok) {
-      status.innerHTML = '<span style="color:var(--success)">✅ Pushed successfully!</span>';
-      toast('Image pushed to Tidbyt!', 'success');
-    } else {
-      const err = await resp.text();
-      status.innerHTML = `<span style="color:var(--danger)">❌ Error ${resp.status}: ${err}</span>`;
-    }
-  } catch (e) {
-    status.innerHTML = `<span style="color:var(--danger)">❌ ${e.message}<br><br>
-    <span style="color:var(--text-dim);font-size:10px;">If blocked by CORS, use the CLI:<br>
-    <code>curl -X POST "https://api.tidbyt.com/v0/devices/${deviceId}/push" \\<br>
-    -H "Authorization: Bearer YOUR_TOKEN" \\<br>
-    -d '{"image":"BASE64_WEBP","installationID":"my-app"}'</code></span></span>`;
-  }
+  if(frames.length===1){const tc=getFrameImageData(0);const blob=await new Promise(r=>tc.toBlob(r,'image/webp'));const buf=await blob.arrayBuffer();b64=btoa(String.fromCharCode(...new Uint8Array(buf)));}
+  else{const delay=parseInt(document.getElementById('frameDelay').value)||100;b64=btoa(String.fromCharCode(...GIFEncoder.encode(getFramesRGBA(),W,H,delay)));}
+  status.innerHTML='<span style="color:var(--accent)">⏳ Pushing...</span>';
+  try{
+    const payload={deviceID:deviceId,image:b64};
+    if(pushMode!=='preview'){payload.installationID=installId;payload.background=(pushMode==='background');}
+    const resp=await fetch(`https://api.tidbyt.com/v0/devices/${deviceId}/push`,{method:'POST',headers:{'Authorization':`Bearer ${apiToken}`,'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(resp.ok){status.innerHTML='<span style="color:var(--success)">✅ Pushed!</span>';toast('Pushed to Tidbyt!','success');}
+    else{const err=await resp.text();status.innerHTML=`<span style="color:var(--danger)">❌ ${resp.status}: ${err}</span>`;}
+  }catch(e){status.innerHTML=`<span style="color:var(--danger)">❌ ${e.message}</span>`;}
 }
 
 function saveDevice() {
-  const deviceId = document.getElementById('deviceId').value.trim();
-  const name = prompt('Name this device:', deviceId);
-  if (!name) return;
-  const devices = JSON.parse(localStorage.getItem('tidbyt-devices') || '[]');
-  devices.push({ name, deviceId, apiToken: document.getElementById('apiToken').value });
-  localStorage.setItem('tidbyt-devices', JSON.stringify(devices));
-  renderSavedDevices();
+  const deviceId=getDeviceId(); const name=prompt('Name this device:',deviceId); if(!name) return;
+  const devices=JSON.parse(localStorage.getItem('tidbyt-devices')||'[]');
+  devices.push({name,deviceId,apiToken:getApiToken()});
+  localStorage.setItem('tidbyt-devices',JSON.stringify(devices)); renderSavedDevices();
 }
-
 function renderSavedDevices() {
-  const devices = JSON.parse(localStorage.getItem('tidbyt-devices') || '[]');
-  const el = document.getElementById('savedDevices');
-  el.innerHTML = devices.map((d, i) => `
-    <div class="layer-item" onclick="loadDevice(${i})">
+  const devices=JSON.parse(localStorage.getItem('tidbyt-devices')||'[]');
+  document.getElementById('savedDevices').innerHTML=devices.map((d,i)=>`
+    <div class="layer-item" onclick="loadDeviceSlot(${i})">
       <span class="layer-name">${d.name}</span>
       <span style="cursor:pointer;color:var(--danger)" onclick="event.stopPropagation();removeDevice(${i})">✕</span>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
-
-function loadDevice(i) {
-  const devices = JSON.parse(localStorage.getItem('tidbyt-devices') || '[]');
-  const d = devices[i];
-  document.getElementById('deviceId').value = d.deviceId;
-  document.getElementById('apiToken').value = d.apiToken;
-  toast(`Loaded device: ${d.name}`, 'success');
+function loadDeviceSlot(i) {
+  const d=JSON.parse(localStorage.getItem('tidbyt-devices')||'[]')[i];
+  document.getElementById('deviceId').value=d.deviceId;document.getElementById('apiToken').value=d.apiToken;
+  savePushConfig();toast(`Loaded: ${d.name}`,'success');
 }
-
 function removeDevice(i) {
-  const devices = JSON.parse(localStorage.getItem('tidbyt-devices') || '[]');
-  devices.splice(i, 1);
-  localStorage.setItem('tidbyt-devices', JSON.stringify(devices));
-  renderSavedDevices();
+  const devices=JSON.parse(localStorage.getItem('tidbyt-devices')||'[]');
+  devices.splice(i,1);localStorage.setItem('tidbyt-devices',JSON.stringify(devices));renderSavedDevices();
 }
 
 // ===== TABS =====
 function switchTab(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase() === name));
+  const tabMap = {'preview':'preview','frames':'frames','community':'apps','code':'code','device':'device','message':'message','push':'push'};
+  document.querySelectorAll('.tab').forEach(t => {
+    const tName = t.textContent.trim().toLowerCase();
+    t.classList.toggle('active', tName === name || tabMap[name] === tName);
+  });
   document.querySelectorAll('.tab-content').forEach(t => t.classList.toggle('active', t.id === `tab-${name}`));
 }
 
+// ===== DEVICE DASHBOARD =====
+async function loadDeviceInfo() {
+  const deviceId=getDeviceId(), apiToken=getApiToken();
+  const dash=document.getElementById('deviceDashboard');
+  if(!deviceId||!apiToken){dash.innerHTML='<p style="color:var(--danger)">Set Device ID and API Token in the Push tab first.</p>';return;}
+  dash.innerHTML='<p style="color:var(--accent)">⏳ Loading...</p>';
+  try {
+    const [devResp, instResp] = await Promise.all([
+      fetch(`https://api.tidbyt.com/v0/devices/${deviceId}`,{headers:{'Authorization':`Bearer ${apiToken}`}}),
+      fetch(`https://api.tidbyt.com/v0/devices/${deviceId}/installations`,{headers:{'Authorization':`Bearer ${apiToken}`}})
+    ]);
+    if(!devResp.ok) throw new Error(`Device: ${devResp.status}`);
+    const dev = await devResp.json();
+    const instData = instResp.ok ? await instResp.json() : {installations:[]};
+    const installations = instData.installations || [];
+    const lastSeen = dev.lastSeen ? new Date(dev.lastSeen).toLocaleString() : 'Unknown';
+    dash.innerHTML = `
+      <div class="device-info-card">
+        <h4>📱 ${escHtml(dev.displayName||dev.id)}</h4>
+        <div class="device-info-row"><span class="label">Device ID</span><span>${escHtml(dev.id||deviceId)}</span></div>
+        <div class="device-info-row"><span class="label">Last Seen</span><span>${lastSeen}</span></div>
+        <div class="device-info-row"><span class="label">Brightness</span>
+          <span style="display:flex;gap:8px;align-items:center;">
+            <input type="range" id="devBrightness" min="0" max="100" value="${dev.brightness||50}" style="width:100px;accent-color:var(--accent);" oninput="document.getElementById('brightnessVal').textContent=this.value+'%'">
+            <span id="brightnessVal">${dev.brightness||50}%</span>
+            <button class="btn" style="padding:4px 8px;font-size:10px;" onclick="setDeviceBrightness()">Set</button>
+          </span>
+        </div>
+        <div class="device-info-row"><span class="label">Auto-Dim</span>
+          <span><input type="checkbox" id="devAutoDim" ${dev.autoDim?'checked':''} onchange="setDeviceAutoDim()" style="accent-color:var(--accent);"> <label for="devAutoDim">Enabled</label></span>
+        </div>
+      </div>
+      <div class="device-info-card">
+        <h4>📦 Installed Apps (${installations.length})</h4>
+        ${installations.length===0?'<p style="font-size:11px;color:var(--text-dim);">No installations found.</p>':''}
+        ${installations.map(inst=>`
+          <div class="install-item">
+            <span><span class="app-name">${escHtml(inst.appID||'unknown')}</span> <span style="color:var(--text-dim);font-size:9px;">${escHtml(inst.id)}</span></span>
+            <button class="btn btn-danger" style="padding:3px 8px;font-size:10px;" onclick="deleteInstallation('${escAttr(inst.id)}')">🗑</button>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } catch(e) {
+    dash.innerHTML=`<p style="color:var(--danger)">❌ ${e.message}</p>`;
+  }
+}
+
+async function setDeviceBrightness() {
+  const deviceId=getDeviceId(),apiToken=getApiToken();
+  const brightness=parseInt(document.getElementById('devBrightness').value);
+  try{
+    const resp=await fetch(`https://api.tidbyt.com/v0/devices/${deviceId}`,{method:'PATCH',headers:{'Authorization':`Bearer ${apiToken}`,'Content-Type':'application/json'},body:JSON.stringify({brightness})});
+    if(resp.ok) toast(`Brightness set to ${brightness}%`,'success'); else toast(`Error: ${resp.status}`,'error');
+  }catch(e){toast(e.message,'error');}
+}
+
+async function setDeviceAutoDim() {
+  const deviceId=getDeviceId(),apiToken=getApiToken();
+  const autoDim=document.getElementById('devAutoDim').checked;
+  try{
+    const resp=await fetch(`https://api.tidbyt.com/v0/devices/${deviceId}`,{method:'PATCH',headers:{'Authorization':`Bearer ${apiToken}`,'Content-Type':'application/json'},body:JSON.stringify({autoDim})});
+    if(resp.ok) toast(`Auto-dim ${autoDim?'enabled':'disabled'}`,'success'); else toast(`Error: ${resp.status}`,'error');
+  }catch(e){toast(e.message,'error');}
+}
+
+async function deleteInstallation(installId) {
+  if(!confirm(`Delete installation ${installId}?`)) return;
+  const deviceId=getDeviceId(),apiToken=getApiToken();
+  try{
+    const resp=await fetch(`https://api.tidbyt.com/v0/devices/${deviceId}/installations/${installId}`,{method:'DELETE',headers:{'Authorization':`Bearer ${apiToken}`}});
+    if(resp.ok){toast('Installation deleted','success');loadDeviceInfo();}
+    else toast(`Error: ${resp.status}`,'error');
+  }catch(e){toast(e.message,'error');}
+}
+
+// ===== MESSAGE PUSH =====
+function updateMsgPreview() {
+  const text=document.getElementById('msgText').value||'';
+  const color=document.getElementById('msgColor').value;
+  const bgc=document.getElementById('msgBgColor').value;
+  const y=parseInt(document.getElementById('msgY').value);
+  const mode=document.getElementById('msgMode').value;
+  const c=document.getElementById('msgPreviewCanvas');
+  const ctx2=c.getContext('2d');
+  ctx2.fillStyle=bgc;ctx2.fillRect(0,0,128,64);
+  // Render text onto a temp frame
+  const tmpFrame=createEmptyFrame();
+  const textWidth=text.length*5;
+  let xPos;
+  if(mode==='static') xPos=Math.max(0,Math.floor((W-textWidth)/2));
+  else xPos=0;
+  drawPixelText(text,xPos,y,color,tmpFrame);
+  for(let py=0;py<H;py++) for(let px=0;px<W;px++){
+    const col=tmpFrame[py*W+px];
+    if(col){ctx2.fillStyle=col;ctx2.fillRect(px*2,py*2,2,2);}
+  }
+}
+
+function stopMsgPreview() { if(msgAnimInterval){clearInterval(msgAnimInterval);msgAnimInterval=null;} }
+
+function previewMessage() {
+  stopMsgPreview();
+  const text=document.getElementById('msgText').value||'';
+  const color=document.getElementById('msgColor').value;
+  const bgc=document.getElementById('msgBgColor').value;
+  const y=parseInt(document.getElementById('msgY').value);
+  const mode=document.getElementById('msgMode').value;
+  const speed=parseInt(document.getElementById('msgSpeed').value)||75;
+  const c=document.getElementById('msgPreviewCanvas');
+  const ctx2=c.getContext('2d');
+  if(mode==='static'){updateMsgPreview();return;}
+  const textWidth=text.length*5+W;
+  let offset=W;
+  msgAnimInterval=setInterval(()=>{
+    ctx2.fillStyle=bgc;ctx2.fillRect(0,0,128,64);
+    const tmpFrame=createEmptyFrame();
+    drawPixelText(text,offset,y,color,tmpFrame);
+    for(let py=0;py<H;py++) for(let px=0;px<W;px++){
+      const col=tmpFrame[py*W+px];
+      if(col){ctx2.fillStyle=col;ctx2.fillRect(px*2,py*2,2,2);}
+    }
+    offset--;
+    if(offset<-text.length*5) offset=W;
+  },speed);
+}
+
+function generateMessageFrames() {
+  const text=document.getElementById('msgText').value||'';
+  const color=document.getElementById('msgColor').value;
+  const bgc=document.getElementById('msgBgColor').value;
+  const y=parseInt(document.getElementById('msgY').value);
+  const mode=document.getElementById('msgMode').value;
+  const bgRgb=hexToRgb(bgc);
+  const msgFrames=[];
+  if(mode==='static'){
+    const f=createEmptyFrame();
+    for(let py=0;py<H;py++) for(let px=0;px<W;px++) f[py*W+px]=bgc;
+    const textWidth=text.length*5;
+    const xPos=Math.max(0,Math.floor((W-textWidth)/2));
+    drawPixelText(text,xPos,y,color,f);
+    msgFrames.push(f);
+  } else {
+    const textWidth=text.length*5;
+    const totalFrames=W+textWidth;
+    for(let i=0;i<totalFrames;i++){
+      const f=createEmptyFrame();
+      for(let py=0;py<H;py++) for(let px=0;px<W;px++) f[py*W+px]=bgc;
+      drawPixelText(text,W-i,y,color,f);
+      msgFrames.push(f);
+    }
+  }
+  return msgFrames;
+}
+
+function msgFrameToRGBA(f) {
+  const tc=document.createElement('canvas');tc.width=W;tc.height=H;
+  const tctx=tc.getContext('2d');tctx.fillStyle='#000';tctx.fillRect(0,0,W,H);
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){const c=f[y*W+x];if(c){tctx.fillStyle=c;tctx.fillRect(x,y,1,1);}}
+  return tctx.getImageData(0,0,W,H).data;
+}
+
+async function pushMessage() {
+  const deviceId=getDeviceId(),apiToken=getApiToken();
+  const status=document.getElementById('msgPushStatus');
+  if(!deviceId||!apiToken){status.innerHTML='<span style="color:var(--danger)">❌ Set Device ID and API Token in Push tab</span>';return;}
+  const pushMode=document.querySelector('input[name="msgPushMode"]:checked').value;
+  const installId=document.getElementById('msgInstallId').value.trim();
+  status.innerHTML='<span style="color:var(--accent)">⏳ Generating...</span>';
+  const msgFrames=generateMessageFrames();
+  let b64;
+  if(msgFrames.length===1){
+    const tc=document.createElement('canvas');tc.width=W;tc.height=H;
+    const tctx=tc.getContext('2d');
+    for(let y=0;y<H;y++) for(let x=0;x<W;x++){const c=msgFrames[0][y*W+x];if(c){tctx.fillStyle=c;tctx.fillRect(x,y,1,1);}}
+    const blob=await new Promise(r=>tc.toBlob(r,'image/webp'));
+    const buf=await blob.arrayBuffer();
+    b64=btoa(String.fromCharCode(...new Uint8Array(buf)));
+  } else {
+    const speed=parseInt(document.getElementById('msgSpeed').value)||75;
+    const allRGBA=msgFrames.map(f=>msgFrameToRGBA(f));
+    const gifBytes=GIFEncoder.encode(allRGBA,W,H,speed);
+    b64=btoa(String.fromCharCode(...gifBytes));
+  }
+  status.innerHTML='<span style="color:var(--accent)">⏳ Pushing...</span>';
+  try{
+    const payload={deviceID:deviceId,image:b64};
+    if(pushMode==='install'&&installId){payload.installationID=installId;}
+    const resp=await fetch(`https://api.tidbyt.com/v0/devices/${deviceId}/push`,{method:'POST',headers:{'Authorization':`Bearer ${apiToken}`,'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(resp.ok){status.innerHTML='<span style="color:var(--success)">✅ Message pushed!</span>';toast('Message sent!','success');}
+    else{const err=await resp.text();status.innerHTML=`<span style="color:var(--danger)">❌ ${resp.status}: ${err}</span>`;}
+  }catch(e){status.innerHTML=`<span style="color:var(--danger)">❌ ${e.message}</span>`;}
+}
+
+// ===== SCHEMA CONFIG PARSER =====
+let currentSchemaConfig = {};
+
+function parseStarlarkSchema(code) {
+  const fields = [];
+  // Find get_schema function body
+  const schemaMatch = code.match(/def\s+get_schema\s*\(\s*\)[\s\S]*?(?=\ndef\s|\Z)/);
+  if (!schemaMatch) return fields;
+  const schemaBody = schemaMatch[0];
+
+  // Match schema.Type(...)  calls
+  const fieldRegex = /schema\.(Text|Toggle|Color|Dropdown|DateTime|Location|Typeahead|OAuth2|PhotoSelect)\s*\(([\s\S]*?)\)/g;
+  let m;
+  while ((m = fieldRegex.exec(schemaBody)) !== null) {
+    const type = m[1];
+    const argsStr = m[2];
+    const field = { type, id:'', name:'', desc:'', icon:'', default:'', options:[] };
+
+    // Parse keyword args: id = "...", name = "...", etc
+    const kwRegex = /(\w+)\s*=\s*(?:"([^"]*?)"|'([^']*?)'|True|False|(\[[\s\S]*?\])|([\w.]+))/g;
+    let km;
+    // Also try positional args
+    const posArgs = [];
+    const posRegex = /"([^"]*?)"|'([^']*?)'/g;
+    let pm;
+    while ((pm = posRegex.exec(argsStr)) !== null) posArgs.push(pm[1]||pm[2]);
+
+    while ((km = kwRegex.exec(argsStr)) !== null) {
+      const key = km[1];
+      const val = km[2] || km[3] || km[4] || km[5] || '';
+      if (key === 'id') field.id = val;
+      else if (key === 'name') field.name = val;
+      else if (key === 'desc') field.desc = val;
+      else if (key === 'icon') field.icon = val;
+      else if (key === 'default') {
+        if (val === 'True') field.default = true;
+        else if (val === 'False') field.default = false;
+        else field.default = val;
+      }
+      else if (key === 'options') {
+        // Parse schema.Option calls
+        const optRegex = /schema\.Option\s*\(\s*display\s*=\s*"([^"]*?)",\s*value\s*=\s*"([^"]*?)"\)/g;
+        let om;
+        while ((om = optRegex.exec(val)) !== null) {
+          field.options.push({ display: om[1], value: om[2] });
+        }
+      }
+    }
+
+    // Fallback to positional
+    if (!field.id && posArgs[0]) field.id = posArgs[0];
+    if (!field.name && posArgs[1]) field.name = posArgs[1];
+    if (!field.desc && posArgs[2]) field.desc = posArgs[2];
+
+    if (field.id || field.name) fields.push(field);
+  }
+  return fields;
+}
+
+function renderSchemaConfig(fields, appId) {
+  const section = document.getElementById('schemaConfigSection');
+  const form = document.getElementById('schemaConfigForm');
+  if (!fields.length) { section.style.display = 'none'; return; }
+  section.style.display = '';
+
+  // Load saved values
+  const saved = JSON.parse(localStorage.getItem(`tidbyt-schema-${appId}`) || '{}');
+
+  form.innerHTML = fields.map(f => {
+    const savedVal = saved[f.id] !== undefined ? saved[f.id] : f.default;
+    const desc = f.desc ? `<div class="field-desc">${escHtml(f.desc)}</div>` : '';
+    const icon = f.icon ? `${f.icon} ` : '';
+    let input = '';
+
+    switch (f.type) {
+      case 'Text':
+      case 'Location':
+      case 'Typeahead':
+        input = `<input type="text" data-schema-id="${escAttr(f.id)}" value="${escAttr(savedVal||'')}" placeholder="${f.type==='Location'?'Location JSON':''}" oninput="saveSchemaField('${escAttr(appId)}','${escAttr(f.id)}',this.value)">`;
+        break;
+      case 'Toggle':
+        const checked = savedVal === true || savedVal === 'True' || savedVal === 'true' ? 'checked' : '';
+        input = `<input type="checkbox" data-schema-id="${escAttr(f.id)}" ${checked} style="width:auto;" onchange="saveSchemaField('${escAttr(appId)}','${escAttr(f.id)}',this.checked)">`;
+        break;
+      case 'Color':
+        input = `<input type="color" data-schema-id="${escAttr(f.id)}" value="${savedVal||'#ffffff'}" style="width:60px;height:30px;padding:0;border:none;" oninput="saveSchemaField('${escAttr(appId)}','${escAttr(f.id)}',this.value)">`;
+        break;
+      case 'Dropdown':
+        input = `<select data-schema-id="${escAttr(f.id)}" onchange="saveSchemaField('${escAttr(appId)}','${escAttr(f.id)}',this.value)">
+          ${f.options.map(o => `<option value="${escAttr(o.value)}" ${savedVal===o.value?'selected':''}>${escHtml(o.display)}</option>`).join('')}
+        </select>`;
+        break;
+      case 'DateTime':
+        input = `<input type="datetime-local" data-schema-id="${escAttr(f.id)}" value="${savedVal||''}" oninput="saveSchemaField('${escAttr(appId)}','${escAttr(f.id)}',this.value)">`;
+        break;
+      case 'PhotoSelect':
+        input = `<input type="file" data-schema-id="${escAttr(f.id)}" accept="image/*" style="font-size:10px;">`;
+        break;
+      case 'OAuth2':
+        input = `<span style="font-size:10px;color:var(--text-dim);">⚠️ OAuth2 — not supported in browser</span>`;
+        break;
+      default:
+        input = `<input type="text" data-schema-id="${escAttr(f.id)}" value="${escAttr(savedVal||'')}">`;
+    }
+
+    const disabledClass = (f.type === 'OAuth2') ? ' disabled' : '';
+    return `<div class="schema-field${disabledClass}">
+      <label>${icon}${escHtml(f.name||f.id)} <span style="color:var(--text-dim);font-size:9px;">(${f.type})</span></label>
+      ${desc}
+      ${input}
+    </div>`;
+  }).join('');
+
+  currentSchemaConfig = { appId, fields };
+}
+
+function saveSchemaField(appId, fieldId, value) {
+  const saved = JSON.parse(localStorage.getItem(`tidbyt-schema-${appId}`) || '{}');
+  saved[fieldId] = value;
+  localStorage.setItem(`tidbyt-schema-${appId}`, JSON.stringify(saved));
+}
+
+// ===== COMMUNITY APPS =====
+let communityApps = [];
+let communityLoaded = false;
+
+async function loadCommunityApps() {
+  if (communityLoaded) { filterCommunityApps(); return; }
+  const listEl = document.getElementById('communityList');
+  const countEl = document.getElementById('communityCount');
+  listEl.innerHTML = '<p style="color:var(--accent)">⏳ Loading from GitHub...</p>';
+  try {
+    const resp = await fetch('https://api.github.com/repos/tidbyt/community/git/trees/main?recursive=1');
+    const data = await resp.json();
+    const manifestPaths = data.tree.filter(f => f.path.startsWith('apps/') && f.path.endsWith('/manifest.yaml')).map(f => f.path);
+    countEl.textContent = `${manifestPaths.length} apps found`;
+    listEl.innerHTML = '<p style="color:var(--accent)">⏳ Loading manifests...</p>';
+    communityApps = [];
+    const batchSize = 20;
+    for (let i = 0; i < manifestPaths.length; i += batchSize) {
+      const batch = manifestPaths.slice(i, i + batchSize);
+      const results = await Promise.all(batch.map(async p => {
+        try { const r = await fetch(`https://raw.githubusercontent.com/tidbyt/community/main/${p}`); return parseManifest(await r.text(), p); }
+        catch(e) { return null; }
+      }));
+      communityApps.push(...results.filter(Boolean));
+      countEl.textContent = `Loading... ${communityApps.length}/${manifestPaths.length}`;
+      if (i % 100 === 0) filterCommunityApps();
+    }
+    communityApps.sort((a, b) => a.name.localeCompare(b.name));
+    communityLoaded = true;
+    countEl.textContent = `${communityApps.length} apps loaded`;
+    filterCommunityApps();
+  } catch(e) { listEl.innerHTML = `<p style="color:var(--danger)">❌ ${e.message}</p>`; }
+}
+
+function parseManifest(yaml, path) {
+  const get = key => { const m = yaml.match(new RegExp(`^${key}:\\s*(.+)$`, 'm')); return m ? m[1].trim() : ''; };
+  const dirName = path.split('/')[1];
+  return { id: get('id')||dirName, name: get('name')||dirName, summary: get('summary'), desc: get('desc'), author: get('author'), fileName: get('fileName'), dir: dirName };
+}
+
+function filterCommunityApps() {
+  const query = (document.getElementById('communitySearch').value || '').toLowerCase();
+  const filtered = query ? communityApps.filter(a => a.name.toLowerCase().includes(query) || (a.summary||'').toLowerCase().includes(query) || a.id.toLowerCase().includes(query)) : communityApps;
+  const listEl = document.getElementById('communityList');
+  const shown = filtered.slice(0, 100);
+  listEl.innerHTML = shown.map(app => `
+    <div class="widget-card" style="position:relative;">
+      <h4>${escHtml(app.name)}</h4>
+      <p>${escHtml(app.summary || app.desc || 'No description')}</p>
+      <p style="font-size:9px;color:var(--text-dim);margin-top:2px;">by ${escHtml(app.author||'unknown')} · ${escHtml(app.id)}</p>
+      <div class="btn-row" style="margin-top:6px;">
+        <button class="btn" onclick="viewAppSource('${app.dir}','${escAttr(app.fileName)}')">👁 Source</button>
+        <button class="btn" onclick="loadAppSchema('${app.dir}','${escAttr(app.fileName)}','${escAttr(app.id)}')">📋 Config</button>
+        <button class="btn" onclick="downloadApp('${app.dir}','${escAttr(app.fileName)}','${escAttr(app.name)}')">⬇ Download</button>
+      </div>
+    </div>
+  `).join('');
+  if (filtered.length > 100) listEl.innerHTML += `<p style="font-size:10px;color:var(--text-dim);text-align:center;padding:8px;">Showing 100 of ${filtered.length}. Narrow your search.</p>`;
+  if (filtered.length === 0 && communityApps.length > 0) listEl.innerHTML = '<p style="color:var(--text-dim);text-align:center;padding:16px;">No apps match.</p>';
+}
+
+function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(s) { return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+
+async function getAppSourceCode(dir, fileName) {
+  if (!fileName) {
+    try {
+      const resp = await fetch(`https://api.github.com/repos/tidbyt/community/contents/apps/${dir}`);
+      const files = await resp.json();
+      const starFile = files.find(f => f.name.endsWith('.star'));
+      if (starFile) fileName = starFile.name;
+      else { toast('No .star file found', 'error'); return null; }
+    } catch(e) { toast('Failed to list files', 'error'); return null; }
+  }
+  try {
+    const resp = await fetch(`https://raw.githubusercontent.com/tidbyt/community/main/apps/${dir}/${fileName}`);
+    return await resp.text();
+  } catch(e) { toast('Failed to load source', 'error'); return null; }
+}
+
+async function viewAppSource(dir, fileName) {
+  const code = await getAppSourceCode(dir, fileName);
+  if (code) { document.getElementById('codeEditor').value = code; switchTab('code'); toast(`Loaded source`, 'success'); }
+}
+
+async function loadAppSchema(dir, fileName, appId) {
+  toast('Loading schema...', 'info');
+  const code = await getAppSourceCode(dir, fileName);
+  if (!code) return;
+  const fields = parseStarlarkSchema(code);
+  if (fields.length === 0) { toast('No schema fields found in get_schema()', 'info'); document.getElementById('schemaConfigSection').style.display = 'none'; return; }
+  renderSchemaConfig(fields, appId);
+  toast(`Found ${fields.length} config fields`, 'success');
+}
+
+async function downloadApp(dir, fileName, name) {
+  const code = await getAppSourceCode(dir, fileName);
+  if (!code) return;
+  const blob = new Blob([code], { type: 'text/plain' });
+  const link = document.createElement('a'); link.download = fileName || `${dir}.star`; link.href = URL.createObjectURL(blob); link.click();
+  URL.revokeObjectURL(link.href); toast(`Downloaded`, 'success');
+}
+
 // ===== UTILS =====
-function hexToRgb(hex) {
-  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-  return {r,g,b};
-}
-
-function rgbToHex(r,g,b) {
-  return '#' + [r,g,b].map(c => c.toString(16).padStart(2,'0')).join('');
-}
-
-function toast(msg, type='info') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + type;
-  setTimeout(() => t.className = 'toast', 3000);
-}
-
+function hexToRgb(hex) { return {r:parseInt(hex.slice(1,3),16),g:parseInt(hex.slice(3,5),16),b:parseInt(hex.slice(5,7),16)}; }
+function rgbToHex(r,g,b) { return '#'+[r,g,b].map(c=>c.toString(16).padStart(2,'0')).join(''); }
+function toast(msg,type='info') { const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.className='toast',3000); }
 function showHelp() { document.getElementById('helpModal').style.display = 'flex'; }
 function closeHelp() { document.getElementById('helpModal').style.display = 'none'; }
 
 // ===== KEYBOARD SHORTCUTS =====
 document.addEventListener('keydown', e => {
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
   if (e.ctrlKey && e.key === 'z') { e.preventDefault(); undo(); }
   else if (e.ctrlKey && e.key === 'y') { e.preventDefault(); redo(); }
   else if (e.ctrlKey && e.key === 's') { e.preventDefault(); exportPNG(); }
@@ -1573,176 +1663,18 @@ document.addEventListener('keydown', e => {
 });
 
 // ===== SAVE/LOAD PROJECT =====
-function saveProject() {
-  const data = { frames, currentFrame, fgColor, bgColor };
-  localStorage.setItem('tidbyt-studio-project', JSON.stringify(data));
-}
-
+function saveProject() { localStorage.setItem('tidbyt-studio-project', JSON.stringify({frames,currentFrame,fgColor,bgColor})); }
 function loadProject() {
   try {
     const data = JSON.parse(localStorage.getItem('tidbyt-studio-project'));
     if (data && data.frames) {
-      frames = data.frames;
-      currentFrame = data.currentFrame || 0;
+      frames = data.frames; currentFrame = data.currentFrame || 0;
       if (data.fgColor) updateColor(data.fgColor);
       if (data.bgColor) { bgColor = data.bgColor; document.getElementById('bgSwatch').style.background = bgColor; }
     }
   } catch(e) {}
 }
-
-// Auto-save every 30s
 setInterval(saveProject, 30000);
-
-// ===== COMMUNITY APPS =====
-let communityApps = [];
-let communityLoaded = false;
-
-async function loadCommunityApps() {
-  if (communityLoaded) { filterCommunityApps(); return; }
-  const listEl = document.getElementById('communityList');
-  const countEl = document.getElementById('communityCount');
-  listEl.innerHTML = '<p style="color:var(--accent)">⏳ Loading app list from GitHub...</p>';
-  
-  try {
-    // Use GitHub Trees API to get all manifest.yaml paths in one call
-    const resp = await fetch('https://api.github.com/repos/tidbyt/community/git/trees/main?recursive=1');
-    const data = await resp.json();
-    
-    // Find all manifest.yaml files
-    const manifestPaths = data.tree
-      .filter(f => f.path.startsWith('apps/') && f.path.endsWith('/manifest.yaml'))
-      .map(f => f.path);
-    
-    countEl.textContent = `${manifestPaths.length} apps found`;
-    listEl.innerHTML = '<p style="color:var(--accent)">⏳ Loading manifests... (this may take a moment)</p>';
-    
-    // Fetch manifests in batches of 20
-    communityApps = [];
-    const batchSize = 20;
-    for (let i = 0; i < manifestPaths.length; i += batchSize) {
-      const batch = manifestPaths.slice(i, i + batchSize);
-      const results = await Promise.all(batch.map(async p => {
-        try {
-          const r = await fetch(`https://raw.githubusercontent.com/tidbyt/community/main/${p}`);
-          const text = await r.text();
-          return parseManifest(text, p);
-        } catch(e) { return null; }
-      }));
-      communityApps.push(...results.filter(Boolean));
-      countEl.textContent = `Loading... ${communityApps.length}/${manifestPaths.length}`;
-      // Render partial results
-      if (i % 100 === 0) filterCommunityApps();
-    }
-    
-    communityApps.sort((a, b) => a.name.localeCompare(b.name));
-    communityLoaded = true;
-    countEl.textContent = `${communityApps.length} apps loaded`;
-    filterCommunityApps();
-  } catch(e) {
-    listEl.innerHTML = `<p style="color:var(--danger)">❌ Failed to load: ${e.message}</p>`;
-  }
-}
-
-function parseManifest(yaml, path) {
-  // Simple YAML parser for manifest fields
-  const get = key => {
-    const m = yaml.match(new RegExp(`^${key}:\\s*(.+)$`, 'm'));
-    return m ? m[1].trim() : '';
-  };
-  const dirName = path.split('/')[1]; // apps/DIRNAME/manifest.yaml
-  return {
-    id: get('id') || dirName,
-    name: get('name') || dirName,
-    summary: get('summary'),
-    desc: get('desc'),
-    author: get('author'),
-    fileName: get('fileName'),
-    dir: dirName,
-  };
-}
-
-function filterCommunityApps() {
-  const query = (document.getElementById('communitySearch').value || '').toLowerCase();
-  const filtered = query
-    ? communityApps.filter(a => a.name.toLowerCase().includes(query) || a.summary.toLowerCase().includes(query) || a.id.toLowerCase().includes(query))
-    : communityApps;
-  
-  const listEl = document.getElementById('communityList');
-  // Show max 100 at a time for performance
-  const shown = filtered.slice(0, 100);
-  listEl.innerHTML = shown.map(app => `
-    <div class="widget-card" style="position:relative;">
-      <h4>${escHtml(app.name)}</h4>
-      <p>${escHtml(app.summary || app.desc || 'No description')}</p>
-      <p style="font-size:9px;color:var(--text-dim);margin-top:2px;">by ${escHtml(app.author || 'unknown')} · ${escHtml(app.id)}</p>
-      <div class="btn-row" style="margin-top:6px;">
-        <button class="btn" onclick="viewAppSource('${app.dir}','${escAttr(app.fileName)}')">👁 Source</button>
-        <button class="btn" onclick="downloadApp('${app.dir}','${escAttr(app.fileName)}','${escAttr(app.name)}')">⬇ Download</button>
-      </div>
-    </div>
-  `).join('');
-  
-  if (filtered.length > 100) {
-    listEl.innerHTML += `<p style="font-size:10px;color:var(--text-dim);text-align:center;padding:8px;">
-      Showing 100 of ${filtered.length} results. Narrow your search.
-    </p>`;
-  }
-  if (filtered.length === 0 && communityApps.length > 0) {
-    listEl.innerHTML = '<p style="color:var(--text-dim);text-align:center;padding:16px;">No apps match your search.</p>';
-  }
-}
-
-function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escAttr(s) { return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
-
-async function viewAppSource(dir, fileName) {
-  if (!fileName) {
-    // Try to find the .star file
-    try {
-      const resp = await fetch(`https://api.github.com/repos/tidbyt/community/contents/apps/${dir}`);
-      const files = await resp.json();
-      const starFile = files.find(f => f.name.endsWith('.star'));
-      if (starFile) fileName = starFile.name;
-      else { toast('No .star file found', 'error'); return; }
-    } catch(e) { toast('Failed to list files', 'error'); return; }
-  }
-  
-  try {
-    const resp = await fetch(`https://raw.githubusercontent.com/tidbyt/community/main/apps/${dir}/${fileName}`);
-    const code = await resp.text();
-    document.getElementById('codeEditor').value = code;
-    switchTab('code');
-    toast(`Loaded ${fileName}`, 'success');
-  } catch(e) {
-    toast('Failed to load source', 'error');
-  }
-}
-
-async function downloadApp(dir, fileName, name) {
-  if (!fileName) {
-    try {
-      const resp = await fetch(`https://api.github.com/repos/tidbyt/community/contents/apps/${dir}`);
-      const files = await resp.json();
-      const starFile = files.find(f => f.name.endsWith('.star'));
-      if (starFile) fileName = starFile.name;
-      else { toast('No .star file found', 'error'); return; }
-    } catch(e) { toast('Failed to list files', 'error'); return; }
-  }
-  
-  try {
-    const resp = await fetch(`https://raw.githubusercontent.com/tidbyt/community/main/apps/${dir}/${fileName}`);
-    const code = await resp.text();
-    const blob = new Blob([code], { type: 'text/plain' });
-    const link = document.createElement('a');
-    link.download = fileName;
-    link.href = URL.createObjectURL(blob);
-    link.click();
-    URL.revokeObjectURL(link.href);
-    toast(`Downloaded ${fileName}`, 'success');
-  } catch(e) {
-    toast('Failed to download', 'error');
-  }
-}
 
 // ===== INIT =====
 initPalette();
@@ -1750,6 +1682,7 @@ loadProject();
 loadPushConfig();
 renderSavedDevices();
 render();
+updateMsgPreview();
 </script>
 </body>
 </html>
