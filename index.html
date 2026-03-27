@@ -222,6 +222,11 @@ body {
 
 /* Export format selector */
 .export-row { display: flex; gap: 6px; margin-bottom: 8px; }
+
+/* Community list */
+#communityList .widget-card h4 { color: var(--accent2); }
+#communityList .widget-card .btn { padding: 4px 8px; font-size: 10px; }
+.tab { padding: 8px 10px; font-size: 10px; }
 </style>
 </head>
 <body>
@@ -339,6 +344,7 @@ body {
       <div class="tabs">
         <div class="tab active" onclick="switchTab('preview')">Preview</div>
         <div class="tab" onclick="switchTab('frames')">Frames</div>
+        <div class="tab" onclick="switchTab('community')">Apps</div>
         <div class="tab" onclick="switchTab('code')">Code</div>
         <div class="tab" onclick="switchTab('push')">Push</div>
       </div>
@@ -416,6 +422,26 @@ body {
           </div>
         </div>
 
+        <!-- Community Apps Tab -->
+        <div class="tab-content" id="tab-community">
+          <div class="tool-section">
+            <h3>Community Apps</h3>
+            <p style="font-size:10px;color:var(--text-dim);margin-bottom:10px;">
+              Browse 1000+ community Tidbyt apps. View source code and download Starlark files.
+              <br><em>Note: These are Starlark source files — you need <a href="https://github.com/tidbyt/pixlet" style="color:var(--accent2)">Pixlet CLI</a> to render them into images for push.</em>
+            </p>
+            <div class="input-group">
+              <label>Search Apps</label>
+              <input type="text" id="communitySearch" placeholder="Search by name..." oninput="filterCommunityApps()">
+            </div>
+            <div class="btn-row" style="margin-bottom:10px;">
+              <button class="btn btn-primary" onclick="loadCommunityApps()">🔄 Load App List</button>
+              <span id="communityCount" style="font-size:10px;color:var(--text-dim);align-self:center;"></span>
+            </div>
+            <div id="communityList" style="max-height:500px;overflow-y:auto;"></div>
+          </div>
+        </div>
+
         <!-- Code Tab -->
         <div class="tab-content" id="tab-code">
           <div class="tool-section">
@@ -463,9 +489,25 @@ def main(config):
               <label>Installation ID (optional)</label>
               <input type="text" id="installId" placeholder="my-custom-app" oninput="savePushConfig()">
             </div>
-            <div class="toggle-row">
-              <input type="checkbox" id="pushBackground">
-              <label for="pushBackground">Background (don't show immediately)</label>
+            <div class="tool-section" style="margin-top:8px;padding:10px;background:var(--bg);border-radius:6px;">
+              <h3 style="margin-bottom:6px;">Push Mode</h3>
+              <div class="toggle-row">
+                <input type="radio" name="pushMode" id="pushPreview" value="preview" checked style="accent-color:var(--accent);">
+                <label for="pushPreview"><strong>Preview</strong> — flash once, not saved</label>
+              </div>
+              <div class="toggle-row">
+                <input type="radio" name="pushMode" id="pushInstall" value="install" style="accent-color:var(--accent);">
+                <label for="pushInstall"><strong>Install</strong> — add to rotation permanently</label>
+              </div>
+              <div class="toggle-row">
+                <input type="radio" name="pushMode" id="pushBackground" value="background" style="accent-color:var(--accent);">
+                <label for="pushBackground"><strong>Background</strong> — add to rotation silently</label>
+              </div>
+              <p style="font-size:9px;color:var(--text-dim);margin-top:6px;">
+                Preview = no installation ID (shows once, then gone).<br>
+                Install = uses installation ID (stays in rotation, re-push to update).<br>
+                Background = install without immediately displaying.
+              </p>
             </div>
             <div class="btn-row" style="margin-top:12px;">
               <button class="btn btn-success" onclick="pushToDevice()">🚀 Push to Device</button>
@@ -1383,11 +1425,16 @@ async function pushToDevice() {
   const deviceId = document.getElementById('deviceId').value.trim();
   const apiToken = document.getElementById('apiToken').value.trim();
   const installId = document.getElementById('installId').value.trim();
-  const background = document.getElementById('pushBackground').checked;
+  const pushMode = document.querySelector('input[name="pushMode"]:checked').value;
   const status = document.getElementById('pushStatus');
   
   if (!deviceId || !apiToken) {
     status.innerHTML = '<span style="color:var(--danger)">❌ Device ID and API Token required</span>';
+    return;
+  }
+  
+  if (pushMode !== 'preview' && !installId) {
+    status.innerHTML = '<span style="color:var(--danger)">❌ Installation ID required for Install/Background mode</span>';
     return;
   }
   
@@ -1414,9 +1461,14 @@ async function pushToDevice() {
     const payload = {
       deviceID: deviceId,
       image: b64,
-      installationID: installId || `tidbyt-studio-${Date.now()}`,
-      background: background,
     };
+    // Preview mode: no installationID (shows once then gone)
+    // Install mode: installationID set (stays in rotation)
+    // Background mode: installationID + background flag (add silently)
+    if (pushMode !== 'preview') {
+      payload.installationID = installId;
+      payload.background = (pushMode === 'background');
+    }
     
     // Use CORS proxy or direct (Tidbyt API supports CORS)
     const resp = await fetch(`https://api.tidbyt.com/v0/devices/${deviceId}/push`, {
@@ -1540,6 +1592,157 @@ function loadProject() {
 
 // Auto-save every 30s
 setInterval(saveProject, 30000);
+
+// ===== COMMUNITY APPS =====
+let communityApps = [];
+let communityLoaded = false;
+
+async function loadCommunityApps() {
+  if (communityLoaded) { filterCommunityApps(); return; }
+  const listEl = document.getElementById('communityList');
+  const countEl = document.getElementById('communityCount');
+  listEl.innerHTML = '<p style="color:var(--accent)">⏳ Loading app list from GitHub...</p>';
+  
+  try {
+    // Use GitHub Trees API to get all manifest.yaml paths in one call
+    const resp = await fetch('https://api.github.com/repos/tidbyt/community/git/trees/main?recursive=1');
+    const data = await resp.json();
+    
+    // Find all manifest.yaml files
+    const manifestPaths = data.tree
+      .filter(f => f.path.startsWith('apps/') && f.path.endsWith('/manifest.yaml'))
+      .map(f => f.path);
+    
+    countEl.textContent = `${manifestPaths.length} apps found`;
+    listEl.innerHTML = '<p style="color:var(--accent)">⏳ Loading manifests... (this may take a moment)</p>';
+    
+    // Fetch manifests in batches of 20
+    communityApps = [];
+    const batchSize = 20;
+    for (let i = 0; i < manifestPaths.length; i += batchSize) {
+      const batch = manifestPaths.slice(i, i + batchSize);
+      const results = await Promise.all(batch.map(async p => {
+        try {
+          const r = await fetch(`https://raw.githubusercontent.com/tidbyt/community/main/${p}`);
+          const text = await r.text();
+          return parseManifest(text, p);
+        } catch(e) { return null; }
+      }));
+      communityApps.push(...results.filter(Boolean));
+      countEl.textContent = `Loading... ${communityApps.length}/${manifestPaths.length}`;
+      // Render partial results
+      if (i % 100 === 0) filterCommunityApps();
+    }
+    
+    communityApps.sort((a, b) => a.name.localeCompare(b.name));
+    communityLoaded = true;
+    countEl.textContent = `${communityApps.length} apps loaded`;
+    filterCommunityApps();
+  } catch(e) {
+    listEl.innerHTML = `<p style="color:var(--danger)">❌ Failed to load: ${e.message}</p>`;
+  }
+}
+
+function parseManifest(yaml, path) {
+  // Simple YAML parser for manifest fields
+  const get = key => {
+    const m = yaml.match(new RegExp(`^${key}:\\s*(.+)$`, 'm'));
+    return m ? m[1].trim() : '';
+  };
+  const dirName = path.split('/')[1]; // apps/DIRNAME/manifest.yaml
+  return {
+    id: get('id') || dirName,
+    name: get('name') || dirName,
+    summary: get('summary'),
+    desc: get('desc'),
+    author: get('author'),
+    fileName: get('fileName'),
+    dir: dirName,
+  };
+}
+
+function filterCommunityApps() {
+  const query = (document.getElementById('communitySearch').value || '').toLowerCase();
+  const filtered = query
+    ? communityApps.filter(a => a.name.toLowerCase().includes(query) || a.summary.toLowerCase().includes(query) || a.id.toLowerCase().includes(query))
+    : communityApps;
+  
+  const listEl = document.getElementById('communityList');
+  // Show max 100 at a time for performance
+  const shown = filtered.slice(0, 100);
+  listEl.innerHTML = shown.map(app => `
+    <div class="widget-card" style="position:relative;">
+      <h4>${escHtml(app.name)}</h4>
+      <p>${escHtml(app.summary || app.desc || 'No description')}</p>
+      <p style="font-size:9px;color:var(--text-dim);margin-top:2px;">by ${escHtml(app.author || 'unknown')} · ${escHtml(app.id)}</p>
+      <div class="btn-row" style="margin-top:6px;">
+        <button class="btn" onclick="viewAppSource('${app.dir}','${escAttr(app.fileName)}')">👁 Source</button>
+        <button class="btn" onclick="downloadApp('${app.dir}','${escAttr(app.fileName)}','${escAttr(app.name)}')">⬇ Download</button>
+      </div>
+    </div>
+  `).join('');
+  
+  if (filtered.length > 100) {
+    listEl.innerHTML += `<p style="font-size:10px;color:var(--text-dim);text-align:center;padding:8px;">
+      Showing 100 of ${filtered.length} results. Narrow your search.
+    </p>`;
+  }
+  if (filtered.length === 0 && communityApps.length > 0) {
+    listEl.innerHTML = '<p style="color:var(--text-dim);text-align:center;padding:16px;">No apps match your search.</p>';
+  }
+}
+
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(s) { return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+
+async function viewAppSource(dir, fileName) {
+  if (!fileName) {
+    // Try to find the .star file
+    try {
+      const resp = await fetch(`https://api.github.com/repos/tidbyt/community/contents/apps/${dir}`);
+      const files = await resp.json();
+      const starFile = files.find(f => f.name.endsWith('.star'));
+      if (starFile) fileName = starFile.name;
+      else { toast('No .star file found', 'error'); return; }
+    } catch(e) { toast('Failed to list files', 'error'); return; }
+  }
+  
+  try {
+    const resp = await fetch(`https://raw.githubusercontent.com/tidbyt/community/main/apps/${dir}/${fileName}`);
+    const code = await resp.text();
+    document.getElementById('codeEditor').value = code;
+    switchTab('code');
+    toast(`Loaded ${fileName}`, 'success');
+  } catch(e) {
+    toast('Failed to load source', 'error');
+  }
+}
+
+async function downloadApp(dir, fileName, name) {
+  if (!fileName) {
+    try {
+      const resp = await fetch(`https://api.github.com/repos/tidbyt/community/contents/apps/${dir}`);
+      const files = await resp.json();
+      const starFile = files.find(f => f.name.endsWith('.star'));
+      if (starFile) fileName = starFile.name;
+      else { toast('No .star file found', 'error'); return; }
+    } catch(e) { toast('Failed to list files', 'error'); return; }
+  }
+  
+  try {
+    const resp = await fetch(`https://raw.githubusercontent.com/tidbyt/community/main/apps/${dir}/${fileName}`);
+    const code = await resp.text();
+    const blob = new Blob([code], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.download = fileName;
+    link.href = URL.createObjectURL(blob);
+    link.click();
+    URL.revokeObjectURL(link.href);
+    toast(`Downloaded ${fileName}`, 'success');
+  } catch(e) {
+    toast('Failed to download', 'error');
+  }
+}
 
 // ===== INIT =====
 initPalette();
