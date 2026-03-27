@@ -496,12 +496,11 @@ def main(config):
       <input type="text" id="textInput" value="Hello!" placeholder="Enter text">
     </div>
     <div class="input-group">
-      <label>Font Size</label>
+      <label>Font</label>
       <select id="textFont">
-        <option value="5">5px (tiny)</option>
-        <option value="8" selected>8px (default)</option>
-        <option value="10">10px</option>
+        <option value="4x6" selected>4×6 Pixel (default)</option>
       </select>
+      <p style="font-size:9px;color:var(--text-dim);margin-top:4px;">Bitmap pixel font — 4px wide, 6px tall per char, 1px spacing</p>
     </div>
     <div class="input-group">
       <label>Position X</label>
@@ -547,6 +546,189 @@ def main(config):
 </div>
 
 <script>
+// ===== BITMAP PIXEL FONT (4x6, covers ASCII 32-126) =====
+// Each char is 4 wide, 6 tall. Stored as array of 6 rows of 4-bit bitmasks.
+const PIXEL_FONT = {};
+(function(){
+  const raw = {
+    ' ':[0,0,0,0,0,0],'!':[4,4,4,0,4,0],'"':[10,10,0,0,0,0],'#':[10,15,10,15,10,0],
+    '$':[6,13,6,11,6,0],'%':[9,2,4,9,0,0],'&':[4,10,4,11,6,0],"'":[4,4,0,0,0,0],
+    '(':[2,4,4,4,2,0],')':[4,2,2,2,4,0],'*':[10,4,14,4,10,0],'+':[0,4,14,4,0,0],
+    ',':[0,0,0,4,4,8],'-':[0,0,14,0,0,0],'.':[0,0,0,0,4,0],'/':[1,2,4,8,0,0],
+    '0':[6,9,9,9,6,0],'1':[4,12,4,4,14,0],'2':[6,9,2,4,15,0],'3':[6,9,2,9,6,0],
+    '4':[2,6,10,15,2,0],'5':[15,8,14,1,14,0],'6':[6,8,14,9,6,0],'7':[15,1,2,4,4,0],
+    '8':[6,9,6,9,6,0],'9':[6,9,7,1,6,0],':':[0,4,0,4,0,0],';':[0,4,0,4,4,8],
+    '<':[2,4,8,4,2,0],'=':[0,14,0,14,0,0],'>':[8,4,2,4,8,0],'?':[6,9,2,0,2,0],
+    '@':[6,9,11,8,6,0],
+    'A':[6,9,15,9,9,0],'B':[14,9,14,9,14,0],'C':[6,9,8,9,6,0],'D':[14,9,9,9,14,0],
+    'E':[15,8,14,8,15,0],'F':[15,8,14,8,8,0],'G':[6,8,11,9,6,0],'H':[9,9,15,9,9,0],
+    'I':[14,4,4,4,14,0],'J':[1,1,1,9,6,0],'K':[9,10,12,10,9,0],'L':[8,8,8,8,15,0],
+    'M':[9,15,15,9,9,0],'N':[9,13,11,9,9,0],'O':[6,9,9,9,6,0],'P':[14,9,14,8,8,0],
+    'Q':[6,9,9,10,5,0],'R':[14,9,14,10,9,0],'S':[6,8,6,1,6,0],'T':[14,4,4,4,4,0],
+    'U':[9,9,9,9,6,0],'V':[9,9,9,10,4,0],'W':[9,9,15,15,9,0],'X':[9,9,6,9,9,0],
+    'Y':[9,9,7,1,6,0],'Z':[15,1,6,8,15,0],
+    '[':[6,4,4,4,6,0],'\\':[8,4,2,1,0,0],']':[6,2,2,2,6,0],'^':[4,10,0,0,0,0],
+    '_':[0,0,0,0,15,0],'`':[4,2,0,0,0,0],
+    'a':[0,6,10,10,7,0],'b':[8,14,9,9,14,0],'c':[0,6,8,8,6,0],'d':[1,7,9,9,7,0],
+    'e':[0,6,11,12,6,0],'f':[2,4,14,4,4,0],'g':[0,7,9,7,1,6],'h':[8,14,9,9,9,0],
+    'i':[4,0,4,4,4,0],'j':[2,0,2,2,10,4],'k':[8,10,12,10,9,0],'l':[4,4,4,4,2,0],
+    'm':[0,9,15,15,9,0],'n':[0,14,9,9,9,0],'o':[0,6,9,9,6,0],'p':[0,14,9,14,8,8],
+    'q':[0,7,9,7,1,1],'r':[0,6,9,8,8,0],'s':[0,7,12,3,14,0],'t':[4,14,4,4,2,0],
+    'u':[0,9,9,9,7,0],'v':[0,9,9,10,4,0],'w':[0,9,15,15,6,0],'x':[0,9,6,6,9,0],
+    'y':[0,9,9,7,1,6],'z':[0,15,2,4,15,0],
+    '{':[2,4,8,4,2,0],'|':[4,4,4,4,4,0],'}':[8,4,2,4,8,0],'~':[0,5,10,0,0,0],
+  };
+  for (const [ch, rows] of Object.entries(raw)) {
+    PIXEL_FONT[ch] = rows;
+  }
+  // Lowercase aliases: map any missing lowercase to uppercase
+  for (let i = 65; i <= 90; i++) {
+    const lower = String.fromCharCode(i + 32);
+    const upper = String.fromCharCode(i);
+    if (!PIXEL_FONT[lower] && PIXEL_FONT[upper]) PIXEL_FONT[lower] = PIXEL_FONT[upper];
+  }
+})();
+
+function drawPixelText(text, startX, startY, color, frameData) {
+  const f = frameData || frames[currentFrame];
+  for (let ci = 0; ci < text.length; ci++) {
+    const ch = text[ci];
+    const glyph = PIXEL_FONT[ch] || PIXEL_FONT['?'];
+    if (!glyph) continue;
+    for (let row = 0; row < 6; row++) {
+      for (let col = 0; col < 4; col++) {
+        if (glyph[row] & (8 >> col)) {
+          const px = startX + ci * 5 + col;
+          const py = startY + row;
+          if (px >= 0 && px < W && py >= 0 && py < H) {
+            f[py * W + px] = color;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ===== MINIMAL GIF ENCODER =====
+// Pure JS GIF89a encoder for 64x32 animations
+const GIFEncoder = {
+  encode(framesRGBA, width, height, delayMs) {
+    // framesRGBA: array of Uint8Array(w*h*4)
+    const delay = Math.round(delayMs / 10); // GIF uses centiseconds
+    const out = [];
+    const write = b => { if (Array.isArray(b)) b.forEach(v => out.push(v)); else out.push(b); };
+    const writeStr = s => { for (let i=0;i<s.length;i++) out.push(s.charCodeAt(i)); };
+    const writeU16 = v => { write(v & 0xff); write((v >> 8) & 0xff); };
+
+    // Header
+    writeStr('GIF89a');
+    writeU16(width); writeU16(height);
+    // Global color table: 256 colors, 8 bits
+    write(0xf7); // GCT flag + 8bit color res + 256 entry table
+    write(0); // bg color index
+    write(0); // pixel aspect
+    // Build global color table (full 256-color palette via median cut... or just use all unique + pad)
+    // Simple: use a fixed 6x6x6 color cube + extras
+    const gct = [];
+    for (let r = 0; r < 6; r++)
+      for (let g = 0; g < 6; g++)
+        for (let b = 0; b < 6; b++) {
+          gct.push(Math.round(r*255/5), Math.round(g*255/5), Math.round(b*255/5));
+        }
+    // Pad to 256 entries (216 cube + 40 padding)
+    while (gct.length < 768) gct.push(0);
+    write(gct);
+
+    // Netscape extension for looping
+    write(0x21); write(0xff); write(11);
+    writeStr('NETSCAPE2.0');
+    write(3); write(1); writeU16(0); write(0); // loop forever
+
+    // Quantize helper: nearest color in 6x6x6 cube
+    function quantize(r, g, b) {
+      const ri = Math.round(r * 5 / 255);
+      const gi = Math.round(g * 5 / 255);
+      const bi = Math.round(b * 5 / 255);
+      return ri * 36 + gi * 6 + bi;
+    }
+
+    for (const rgba of framesRGBA) {
+      // Graphic control extension
+      write(0x21); write(0xf9); write(4);
+      write(0x00); // no transparency
+      writeU16(delay);
+      write(0); // transparent color index (unused)
+      write(0);
+      // Image descriptor
+      write(0x2c);
+      writeU16(0); writeU16(0); writeU16(width); writeU16(height);
+      write(0); // no local color table
+
+      // LZW compress the indexed pixels
+      const pixels = new Uint8Array(width * height);
+      for (let i = 0; i < width * height; i++) {
+        pixels[i] = quantize(rgba[i*4], rgba[i*4+1], rgba[i*4+2]);
+      }
+      const compressed = this.lzwEncode(8, pixels);
+      write(8); // LZW min code size
+      // Write in sub-blocks of 255
+      let pos = 0;
+      while (pos < compressed.length) {
+        const chunk = Math.min(255, compressed.length - pos);
+        write(chunk);
+        for (let i = 0; i < chunk; i++) out.push(compressed[pos++]);
+      }
+      write(0); // block terminator
+    }
+    write(0x3b); // trailer
+    return new Uint8Array(out);
+  },
+
+  lzwEncode(minCodeSize, pixels) {
+    const clearCode = 1 << minCodeSize;
+    const eoiCode = clearCode + 1;
+    let codeSize = minCodeSize + 1;
+    let nextCode = eoiCode + 1;
+    const out = [];
+    let buf = 0, bufLen = 0;
+    const emit = code => {
+      buf |= code << bufLen;
+      bufLen += codeSize;
+      while (bufLen >= 8) { out.push(buf & 0xff); buf >>= 8; bufLen -= 8; }
+    };
+    // Build initial table
+    let table = new Map();
+    for (let i = 0; i < clearCode; i++) table.set(String(i), i);
+
+    emit(clearCode);
+    let current = String(pixels[0]);
+    for (let i = 1; i < pixels.length; i++) {
+      const next = String(pixels[i]);
+      const combined = current + ',' + next;
+      if (table.has(combined)) {
+        current = combined;
+      } else {
+        emit(table.get(current));
+        if (nextCode < 4096) {
+          table.set(combined, nextCode++);
+          if (nextCode > (1 << codeSize) && codeSize < 12) codeSize++;
+        } else {
+          emit(clearCode);
+          table = new Map();
+          for (let j = 0; j < clearCode; j++) table.set(String(j), j);
+          nextCode = eoiCode + 1;
+          codeSize = minCodeSize + 1;
+        }
+        current = next;
+      }
+    }
+    emit(table.get(current));
+    emit(eoiCode);
+    if (bufLen > 0) out.push(buf & 0xff);
+    return out;
+  }
+};
+
 // ===== STATE =====
 const W = 64, H = 32;
 const PIXEL_SIZE = 10;
@@ -930,30 +1112,11 @@ function closeTextModal() {
 
 function stampText() {
   const text = document.getElementById('textInput').value;
-  const fontSize = parseInt(document.getElementById('textFont').value);
   const tx = parseInt(document.getElementById('textX').value);
   const ty = parseInt(document.getElementById('textY').value);
   
   saveState();
-  // Render text to temp canvas then sample pixels
-  const tc = document.createElement('canvas');
-  tc.width = W; tc.height = H;
-  const tctx = tc.getContext('2d');
-  tctx.fillStyle = fgColor;
-  tctx.font = `${fontSize}px monospace`;
-  tctx.textBaseline = 'top';
-  tctx.fillText(text, tx, ty);
-  
-  const imgData = tctx.getImageData(0, 0, W, H);
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W; x++) {
-      const i = (y * W + x) * 4;
-      if (imgData.data[i + 3] > 128) {
-        const r = imgData.data[i], g = imgData.data[i+1], b = imgData.data[i+2];
-        setPixel(x, y, `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`);
-      }
-    }
-  }
+  drawPixelText(text, tx, ty, fgColor);
   closeTextModal();
   render();
 }
@@ -1094,30 +1257,41 @@ function exportPNG() {
 }
 
 function exportWebP() {
-  const tc = getFrameImageData(currentFrame);
-  const link = document.createElement('a');
-  link.download = 'tidbyt-frame.webp';
-  link.href = tc.toDataURL('image/webp');
-  link.click();
-  toast('WebP exported!', 'success');
+  if (frames.length === 1) {
+    const tc = getFrameImageData(0);
+    const link = document.createElement('a');
+    link.download = 'tidbyt.webp';
+    link.href = tc.toDataURL('image/webp');
+    link.click();
+    toast('WebP exported!', 'success');
+  } else {
+    // Multi-frame: export as animated GIF (browsers can't create animated WebP)
+    exportGIF();
+  }
+}
+
+function getFramesRGBA() {
+  const allRGBA = [];
+  for (let fi = 0; fi < frames.length; fi++) {
+    const tc = getFrameImageData(fi);
+    const tctx = tc.getContext('2d');
+    const imgData = tctx.getImageData(0, 0, W, H);
+    allRGBA.push(imgData.data);
+  }
+  return allRGBA;
 }
 
 function exportGIF() {
-  // For multi-frame, we'll create an animated sequence export as individual PNGs
-  // (true GIF encoding requires a library — offer frames as a zip-like download)
-  if (frames.length === 1) {
-    exportPNG();
-    return;
-  }
-  // Export each frame as individual PNG with numbered names
-  frames.forEach((f, i) => {
-    const tc = getFrameImageData(i);
-    const link = document.createElement('a');
-    link.download = `tidbyt-frame-${String(i).padStart(3,'0')}.png`;
-    link.href = tc.toDataURL('image/png');
-    link.click();
-  });
-  toast(`Exported ${frames.length} frames as PNGs`, 'success');
+  const delay = parseInt(document.getElementById('frameDelay').value) || 100;
+  const allRGBA = getFramesRGBA();
+  const gifBytes = GIFEncoder.encode(allRGBA, W, H, delay);
+  const blob = new Blob([gifBytes], { type: 'image/gif' });
+  const link = document.createElement('a');
+  link.download = 'tidbyt-animation.gif';
+  link.href = URL.createObjectURL(blob);
+  link.click();
+  URL.revokeObjectURL(link.href);
+  toast(`Animated GIF exported (${frames.length} frames)!`, 'success');
 }
 
 function exportStarlark() {
@@ -1219,13 +1393,20 @@ async function pushToDevice() {
   
   status.innerHTML = '<span style="color:var(--accent)">⏳ Generating image...</span>';
   
-  // Generate WebP
-  const tc = getFrameImageData(currentFrame);
-  
-  // If multiple frames, create animation - for now just push single frame
-  const blob = await new Promise(r => tc.toBlob(r, 'image/webp'));
-  const buf = await blob.arrayBuffer();
-  const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+  let b64;
+  if (frames.length === 1) {
+    // Single frame: send as WebP
+    const tc = getFrameImageData(0);
+    const blob = await new Promise(r => tc.toBlob(r, 'image/webp'));
+    const buf = await blob.arrayBuffer();
+    b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+  } else {
+    // Multi-frame: encode as animated GIF
+    const delay = parseInt(document.getElementById('frameDelay').value) || 100;
+    const allRGBA = getFramesRGBA();
+    const gifBytes = GIFEncoder.encode(allRGBA, W, H, delay);
+    b64 = btoa(String.fromCharCode(...gifBytes));
+  }
   
   status.innerHTML = '<span style="color:var(--accent)">⏳ Pushing to device...</span>';
   
