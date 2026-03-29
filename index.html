@@ -166,8 +166,76 @@ body {
 ::-webkit-scrollbar-track { background: var(--surface); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 @media (max-width: 900px) {
-  .main { grid-template-columns: 1fr; }
-  .panel { border: none; border-bottom: 1px solid var(--border); max-height: 40vh; }
+  body { overflow: auto; }
+  .app { grid-template-rows: 44px auto; height: auto; min-height: 100vh; }
+  .header h1 { font-size: 13px; }
+  .main {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    overflow: visible;
+  }
+  .panel {
+    border: none; border-bottom: 1px solid var(--border);
+    max-height: none; overflow: visible;
+  }
+  .panel:first-child {
+    order: 2;
+  }
+  .panel:first-child .panel-body {
+    display: none;
+  }
+  .panel:first-child.expanded .panel-body {
+    display: block;
+  }
+  .panel:first-child .panel-title {
+    cursor: pointer;
+  }
+  .panel:first-child .panel-title::after {
+    content: ' ▸ tap to expand';
+    font-size: 9px;
+    color: var(--text-dim);
+    font-weight: 400;
+  }
+  .panel:first-child.expanded .panel-title::after {
+    content: ' ▾ tap to collapse';
+  }
+  .canvas-area {
+    order: 1;
+    padding: 8px;
+  }
+  #pixelCanvas {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100vw;
+    touch-action: none;
+  }
+  .canvas-info {
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 10px;
+    justify-content: center;
+  }
+  .panel:last-child {
+    order: 3;
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+  .tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { white-space: nowrap; padding: 8px 10px; font-size: 9px; }
+  .tool-grid { grid-template-columns: repeat(4, 1fr); }
+  .tool-btn { padding: 10px 6px; font-size: 18px; }
+  .btn { padding: 8px 10px; font-size: 11px; }
+  .btn-row { flex-wrap: wrap; }
+  .preview-display { padding: 10px; }
+  #previewCanvas { width: 192px; height: 96px; }
+  .widget-card { padding: 8px; }
+  .code-editor textarea { font-size: 10px; min-height: 150px; }
 }
 .layer-item {
   display: flex; align-items: center; gap: 8px; padding: 6px 8px;
@@ -1676,13 +1744,28 @@ function loadProject() {
 }
 setInterval(saveProject, 30000);
 
+// ===== MOBILE: collapsible tools panel =====
+document.addEventListener('DOMContentLoaded', () => {
+  const toolsPanel = document.querySelector('.panel:first-child');
+  if (toolsPanel) {
+    toolsPanel.querySelector('.panel-title').addEventListener('click', () => {
+      if (window.innerWidth <= 900) toolsPanel.classList.toggle('expanded');
+    });
+  }
+  // Touch support for canvas drawing on mobile
+  const cv = document.getElementById('pixelCanvas');
+  cv.addEventListener('touchstart', e => { e.preventDefault(); const t = e.touches[0]; cv.dispatchEvent(new MouseEvent('mousedown', {clientX:t.clientX,clientY:t.clientY})); }, {passive:false});
+  cv.addEventListener('touchmove', e => { e.preventDefault(); const t = e.touches[0]; cv.dispatchEvent(new MouseEvent('mousemove', {clientX:t.clientX,clientY:t.clientY})); }, {passive:false});
+  cv.addEventListener('touchend', e => { e.preventDefault(); cv.dispatchEvent(new MouseEvent('mouseup', {})); }, {passive:false});
+});
+
 // ===== INIT =====
 initPalette();
 loadProject();
 loadPushConfig();
 renderSavedDevices();
 render();
-updateMsgPreview();
+if (typeof updateMsgPreview === 'function') updateMsgPreview();
 </script>
 </body>
 </html>
